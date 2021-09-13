@@ -16,7 +16,7 @@ namespace Interfaces
 
         IEnumerable<Expression<Func<TFrom, TTo>>> GetRules<TFrom, TTo>();
 
-        bool TryDeleteRule<TFrom, TTo>();
+        void DeleteRule<TFrom, TTo>();
 
         bool RuleExist<TFrom, TTo>();
     }

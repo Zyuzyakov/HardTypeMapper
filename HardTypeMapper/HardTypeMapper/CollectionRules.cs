@@ -78,7 +78,7 @@ namespace HardTypeMapper
             throw new NotImplementedException();
         }
 
-        public bool TryDeleteRule<TFrom, TTo>()
+        public void DeleteRule<TFrom, TTo>()
         {
             throw new NotImplementedException();
         }
