@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using Exceptions.ForCollectionRules;
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -10,22 +11,39 @@ namespace HardTypeMapper
         #region Сlass variables
         protected Dictionary<Type, Expression> dictRuleExpressionWithOutName;
 
-        protected Dictionary<Type, Expression> dictRuleExpressionWithName;
+        protected Dictionary<string, Expression> dictRuleExpressionWithName;
         #endregion
 
         #region Class constructors
-        public CollectionRules() { }
+        public CollectionRules() 
+        {
+            dictRuleExpressionWithOutName = new Dictionary<Type, Expression>();
+            dictRuleExpressionWithName = new Dictionary<string, Expression>();
+        }
         #endregion
 
         #region Add methods
         public ICollectionRules AddRule<TFrom, TTo>(Expression<Func<TFrom, TTo>> expressionMaping)
         {
-            throw new NotImplementedException();
+            if (expressionMaping is null)
+                throw new ArgumentNullException(nameof(expressionMaping));
+
+            if (dictRuleExpressionWithOutName.TryAdd(expressionMaping.GetType(), expressionMaping))
+                return this;
+            else throw new RuleExistException(expressionMaping.GetType());
         }
 
         public ICollectionRules AddRule<TFrom, TTo>(Expression<Func<TFrom, TTo>> expressionMaping, string nameRule)
         {
-            throw new NotImplementedException();
+            if (expressionMaping is null)
+                throw new ArgumentNullException(nameof(expressionMaping));
+
+            if (string.IsNullOrEmpty(nameRule))
+                throw new ArgumentNullException(nameof(nameRule));
+
+            if (dictRuleExpressionWithName.TryAdd(nameRule, expressionMaping))
+                return this;
+            else throw new RuleExistException(nameRule);
         }
         #endregion
 
