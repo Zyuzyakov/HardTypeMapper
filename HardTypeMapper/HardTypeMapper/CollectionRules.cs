@@ -82,6 +82,16 @@ namespace HardTypeMapper
         {
             throw new NotImplementedException();
         }
+
+        public void DeleteRule<TFrom, TTo>(string nameRule)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RuleExist<TFrom, TTo>(string nameRule)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Private/protected methods

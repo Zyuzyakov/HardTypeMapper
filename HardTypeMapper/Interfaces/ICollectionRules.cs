@@ -18,6 +18,10 @@ namespace Interfaces
 
         void DeleteRule<TFrom, TTo>();
 
+        void DeleteRule<TFrom, TTo>(string nameRule);
+
         bool RuleExist<TFrom, TTo>();
+
+        bool RuleExist<TFrom, TTo>(string nameRule);
     }
 }
