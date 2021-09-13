@@ -7,11 +7,15 @@ namespace HardTypeMapper
 {
     public class CollectionRules : ICollectionRules
     {
+        #region Сlass variables
         protected Dictionary<Type, Expression> dictRuleExpressionWithOutName;
 
         protected Dictionary<Type, Expression> dictRuleExpressionWithName;
+        #endregion
 
+        #region Class constructors
         public CollectionRules() { }
+        #endregion
 
         #region Add methods
         public ICollectionRules AddRule<TFrom, TTo>(Expression<Func<TFrom, TTo>> expressionMaping)
@@ -54,7 +58,7 @@ namespace HardTypeMapper
         }
         #endregion
 
-        #region private methods
+        #region Private methods
 
         #endregion
     }
