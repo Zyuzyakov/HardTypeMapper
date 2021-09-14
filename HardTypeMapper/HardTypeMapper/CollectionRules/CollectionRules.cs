@@ -2,9 +2,10 @@
 using Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
-namespace HardTypeMapper
+namespace HardTypeMapper.CollectionRules
 {
     public class CollectionRules : ICollectionRules
     {
@@ -66,9 +67,17 @@ namespace HardTypeMapper
             throw new RuleNotExistException(nameof(Expression<Func<ICollectionRules, TFrom, TTo>>));
         }
 
-        public Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null)
+        public Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(nameRule))
+                throw new ArgumentNullException(nameof(nameRule));
+
+            if (!RuleExist<TFrom, TTo>(nameRule))
+                throw new RuleNotExistException(nameRule);
+
+            var ruleExpr = dictRuleExpression.First(x => x.Key.SetName == nameRule).Value;
+
+            return ConvertExpression<Expression<Func<ICollectionRules, TFrom, TTo>>>(ruleExpr);
         }
 
         public IEnumerable<Expression<Func<ICollectionRules, TFrom, TTo>>> GetRules<TFrom, TTo>()
@@ -108,6 +117,14 @@ namespace HardTypeMapper
 
             if (!dictRuleExpression.TryAdd(key, expr))
                 throw new RuleNotAddException(key.SetName);
+        }
+
+        private TAsType ConvertExpression<TAsType>(Expression expr) where TAsType : Expression
+        {
+            if (expr is TAsType)
+                return (TAsType)expr;
+
+            throw new ExpressionNotNeededTypeException(typeof(TAsType).FullName);
         }
         #endregion
     }

@@ -1,4 +1,4 @@
-﻿using HardTypeMapper;
+﻿using HardTypeMapper.CollectionRules;
 using System.Linq;
 using Xunit;
 

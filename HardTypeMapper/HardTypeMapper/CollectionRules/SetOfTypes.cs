@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HardTypeMapper
+namespace HardTypeMapper.CollectionRules
 {
     public interface ISetOfTypes
     {

@@ -1,9 +1,9 @@
 ﻿using Interfaces;
 using Xunit;
-using HardTypeMapper;
 using System;
 using System.Linq.Expressions;
 using Exceptions.ForCollectionRules;
+using HardTypeMapper.CollectionRules;
 
 namespace UnitTests.CollectionRulesMethodTests
 {

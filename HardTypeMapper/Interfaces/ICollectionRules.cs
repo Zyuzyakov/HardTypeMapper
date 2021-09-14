@@ -16,7 +16,7 @@ namespace Interfaces
 
         Expression<Func<ICollectionRules, TFrom, TTo>> GetAnyRule<TFrom, TTo>();
 
-        Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null);
+        Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule);
 
         IEnumerable<Expression<Func<ICollectionRules, TFrom, TTo>>> GetRules<TFrom, TTo>();
 
