@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace HardTypeMapper.CollectionRules
 {
-    public class CollectionRules : ICollectionRules
+    public class CollectionRules : ICollectionRulesOneIn
     {
         #region Сlass variables
         protected Dictionary<ISetOfTypes, Expression> dictRuleExpression;
@@ -21,27 +21,9 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Add methods
-        public ICollectionRules AddRule<TFrom, TTo>(Expression<Func<ICollectionRules, TFrom, TTo>> expressionMaping, string nameRule = null)
+        public ICollectionRulesOneIn AddRule<TFrom, TTo>(Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> expressionMaping, string nameRule = null)
         {
             var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom));
-
-            AddToCollection(expressionMaping, key);
-
-            return this;
-        }
-
-        public ICollectionRules AddRule<TFrom1, TFrom2, TTo>(Expression<Func<ICollectionRules, TFrom1, TFrom2, TTo>> expressionMaping, string nameRule = null)
-        {
-            var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom1), typeof(TFrom2));
-
-            AddToCollection(expressionMaping, key);
-
-            return this;
-        }
-
-        public ICollectionRules AddRule<TFrom1, TFrom2, TFrom3, TTo>(Expression<Func<ICollectionRules, TFrom1, TFrom2, TFrom3, TTo>> expressionMaping, string nameRule = null)
-        {
-            var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom1), typeof(TFrom2), typeof(TFrom3));
 
             AddToCollection(expressionMaping, key);
 
@@ -50,24 +32,24 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Get methods
-        public Expression<Func<ICollectionRules, TFrom, TTo>> GetAnyRule<TFrom, TTo>()
+        public Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> GetAnyRule<TFrom, TTo>()
         {
            var key = GetSetOfTypes<TTo>(string.Empty, typeof(TFrom));
 
             foreach (var item in dictRuleExpression)
                 if (item.Key.Equals(key, true))
                 {
-                    var exprReturn = item.Value as Expression<Func<ICollectionRules, TFrom, TTo>>;
+                    var exprReturn = item.Value as Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>;
 
                     if (exprReturn is not null)
                         return exprReturn;
-                    else throw new ExpressionNotNeededTypeException(nameof(Expression<Func<ICollectionRules, TFrom, TTo>>));
+                    else throw new ExpressionNotNeededTypeException(nameof(Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>));
                 }
 
-            throw new RuleNotExistException(nameof(Expression<Func<ICollectionRules, TFrom, TTo>>));
+            throw new RuleNotExistException(nameof(Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>));
         }
 
-        public Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule)
+        public Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule)
         {
             if (string.IsNullOrEmpty(nameRule))
                 throw new ArgumentNullException(nameof(nameRule));
@@ -77,10 +59,10 @@ namespace HardTypeMapper.CollectionRules
 
             var ruleExpr = dictRuleExpression.First(x => x.Key.SetName == nameRule).Value;
 
-            return ConvertExpression<Expression<Func<ICollectionRules, TFrom, TTo>>>(ruleExpr);
+            return ConvertExpression<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(ruleExpr);
         }
 
-        public IEnumerable<Expression<Func<ICollectionRules, TFrom, TTo>>> GetRules<TFrom, TTo>()
+        public IEnumerable<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>> GetRules<TFrom, TTo>()
         {
             throw new NotImplementedException();
         }

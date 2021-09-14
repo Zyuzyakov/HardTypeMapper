@@ -13,7 +13,7 @@ namespace UnitTests.CollectionRulesMethodTests
         [Fact]
         public void VoidConstructor_Correct()
         {
-            ICollectionRules collectionRules = new CollectionRules();
+            ICollectionRulesOneIn collectionRules = new CollectionRules();
 
             Assert.NotNull(collectionRules);
         }
@@ -25,7 +25,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<ICollectionRules, Street, StreetDto>> expr = null;
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = null;
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr));
         }
@@ -35,7 +35,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<ICollectionRules, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             collectionRules.AddRule(expr);
         }
@@ -45,7 +45,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<ICollectionRules, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             collectionRules.AddRule(expr);
 
@@ -57,7 +57,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<ICollectionRules, Street, StreetDto>> expr = null;
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = null;
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr, null));
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr, string.Empty));
@@ -69,7 +69,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<ICollectionRules, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             collectionRules.AddRule(expr, "test");
         }
@@ -79,7 +79,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<ICollectionRules, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             collectionRules.AddRule(expr, "test");
 
