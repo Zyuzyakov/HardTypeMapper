@@ -4,18 +4,24 @@ using System.Linq;
 
 namespace HardTypeMapper
 {
-    public struct SetOfTypes<TOutType>
+    public interface ISetOfTypes
+    {
+        Type GetOutTypeParam();
+
+        string SetName { get; }
+    }
+    public struct SetOfTypes<TOutType> : ISetOfTypes
     {
         public SetOfTypes(Type inType, string nameRule = null)
         {
-            SetName = nameRule;
+            SetName = nameRule ?? string.Empty;
             _inTypes = new HashSet<Type>();
             _inTypes.Add(inType);
         }
 
         public SetOfTypes(string nameRule, params Type[] inTypes)
         {
-            SetName = nameRule;
+            SetName = nameRule ?? string.Empty;
             _inTypes = new HashSet<Type>();
             foreach (var param in inTypes)
                 _inTypes.Add(param);
