@@ -1,5 +1,5 @@
 ﻿using Exceptions.ForCollectionRules;
-using Interfaces;
+using Interfaces.CollectionRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,14 +57,21 @@ namespace HardTypeMapper.CollectionRules
             if (!RuleExist<TFrom, TTo>(nameRule))
                 throw new RuleNotExistException(nameRule);
 
-            var ruleExpr = dictRuleExpression.First(x => x.Key.SetName == nameRule).Value;
+            var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom));
 
-            return ConvertExpression<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(ruleExpr);
+            var rules = GetRule<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(key);
+
+            if (!rules.Any())
+                throw new RuleNotExistException(nameRule);
+
+            return rules.First();
         }
 
         public IEnumerable<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>> GetRules<TFrom, TTo>()
         {
-            throw new NotImplementedException();
+            var key = GetSetOfTypes<TTo>(null, typeof(TFrom));
+
+            return GetRule<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(key);
         }
         #endregion
 
@@ -101,12 +108,26 @@ namespace HardTypeMapper.CollectionRules
                 throw new RuleNotAddException(key.SetName);
         }
 
-        private TAsType ConvertExpression<TAsType>(Expression expr) where TAsType : Expression
+        private TRuleExpr ConvertExpression<TRuleExpr>(Expression expr) where TRuleExpr : Expression
         {
-            if (expr is TAsType)
-                return (TAsType)expr;
+            if (expr is TRuleExpr)
+                return (TRuleExpr)expr;
 
-            throw new ExpressionNotNeededTypeException(typeof(TAsType).FullName);
+            throw new ExpressionNotNeededTypeException(typeof(TRuleExpr).FullName);
+        }
+
+        private IEnumerable<TRuleExpr> GetRule<TRuleExpr>(ISetOfTypes key) where TRuleExpr : Expression
+        {
+            Func<KeyValuePair<ISetOfTypes, Expression>, bool> equals =
+                pair => string.IsNullOrEmpty(pair.Key.SetName)
+                ?
+                pair.Key.Equals(key, false)
+                :
+                pair.Key.Equals(key, true);
+
+            foreach (var item in dictRuleExpression)
+                if (equals(item))
+                    yield return ConvertExpression<TRuleExpr>(item.Value);
         }
         #endregion
     }

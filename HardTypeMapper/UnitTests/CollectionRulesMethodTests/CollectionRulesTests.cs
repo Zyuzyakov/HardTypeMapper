@@ -1,9 +1,9 @@
-﻿using Interfaces;
-using Xunit;
+﻿using Xunit;
 using System;
 using System.Linq.Expressions;
 using Exceptions.ForCollectionRules;
 using HardTypeMapper.CollectionRules;
+using Interfaces.CollectionRules;
 
 namespace UnitTests.CollectionRulesMethodTests
 {
