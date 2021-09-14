@@ -34,19 +34,14 @@ namespace HardTypeMapper.CollectionRules
         #region Get methods
         public Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> GetAnyRule<TFrom, TTo>()
         {
-           var key = GetSetOfTypes<TTo>(string.Empty, typeof(TFrom));
+            var key = GetSetOfTypes<TTo>(null, typeof(TFrom));
 
-            foreach (var item in dictRuleExpression)
-                if (item.Key.Equals(key, true))
-                {
-                    var exprReturn = item.Value as Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>;
+            var rules = GetRule<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(key);
 
-                    if (exprReturn is not null)
-                        return exprReturn;
-                    else throw new ExpressionNotNeededTypeException(nameof(Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>));
-                }
+            if (!rules.Any())
+                throw new RuleNotExistException(typeof(Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>));
 
-            throw new RuleNotExistException(nameof(Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>));
+            return rules.First();
         }
 
         public Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule)
@@ -78,12 +73,37 @@ namespace HardTypeMapper.CollectionRules
         #region Exist and Delete methods
         public bool RuleExist<TFrom, TTo>(string nameRule = null)
         {
-            throw new NotImplementedException();
+            if (string.Empty == nameRule)
+                throw new ArgumentException($"Параметр <{nameof(nameRule)}> может быть равным null, но не может быть равным string.Empty.");
+
+            var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom));
+
+            return GetRule<Expression>(key).Any();
         }
 
         public void DeleteRule<TFrom, TTo>(string nameRule = null)
         {
-            throw new NotImplementedException();
+            if (string.Empty == nameRule)
+                throw new ArgumentException($"Параметр <{nameof(nameRule)}> может быть равным null, но не может быть равным string.Empty.");
+
+            var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom));
+
+            Func<KeyValuePair<ISetOfTypes, Expression>, bool> equals =
+               pair => string.IsNullOrEmpty(pair.Key.SetName)
+               ?
+               pair.Key.Equals(key, false)
+               :
+               pair.Key.Equals(key, true);
+
+            foreach (var item in dictRuleExpression)
+                if (equals(item))
+                {
+                    dictRuleExpression.Remove(item.Key);
+
+                    return;
+                }
+
+            throw new RuleNotExistException(nameRule);
         }
         #endregion
 
