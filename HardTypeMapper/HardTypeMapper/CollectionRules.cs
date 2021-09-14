@@ -51,7 +51,19 @@ namespace HardTypeMapper
         #region Get methods
         public Expression<Func<ICollectionRules, TFrom, TTo>> GetAnyRule<TFrom, TTo>()
         {
-            throw new NotImplementedException();
+           var key = GetSetOfTypes<TTo>(string.Empty, typeof(TFrom));
+
+            foreach (var item in dictRuleExpression)
+                if (item.Key.Equals(key, true))
+                {
+                    var exprReturn = item.Value as Expression<Func<ICollectionRules, TFrom, TTo>>;
+
+                    if (exprReturn is not null)
+                        return exprReturn;
+                    else throw new ExpressionNotNeededTypeException(nameof(Expression<Func<ICollectionRules, TFrom, TTo>>));
+                }
+
+            throw new RuleNotExistException(nameof(Expression<Func<ICollectionRules, TFrom, TTo>>));
         }
 
         public Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null)

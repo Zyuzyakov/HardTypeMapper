@@ -49,7 +49,7 @@ namespace UnitTests.CollectionRulesMethodTests
 
             collectionRules.AddRule(expr);
 
-            Assert.Throws<RuleExistException>(() => collectionRules.AddRule(expr));
+            Assert.Throws<RuleNotAddException>(() => collectionRules.AddRule(expr));
         }
 
         [Fact]
@@ -83,13 +83,13 @@ namespace UnitTests.CollectionRulesMethodTests
 
             collectionRules.AddRule(expr, "test");
 
-            Assert.Throws<RuleExistException>(() => collectionRules.AddRule(expr, "test"));
+            Assert.Throws<RuleNotAddException>(() => collectionRules.AddRule(expr, "test"));
         }
         #endregion
 
         #region Get methods
         [Fact]
-        public void GetFirstRule_WhenNotExist_ThrowRuleNotExistException()
+        public void GetAnyRule_WhenNotExist_ThrowRuleNotExistException()
         {
             var collectionRules = new CollectionRules();
 
@@ -97,7 +97,7 @@ namespace UnitTests.CollectionRulesMethodTests
         }
 
         [Fact]
-        public void GetFirstRule_Correct()
+        public void GetAnyRule_Correct()
         {
             var collectionRules = new CollectionRules();
 
