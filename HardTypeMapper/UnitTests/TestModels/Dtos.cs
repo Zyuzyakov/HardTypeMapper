@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UnitTests
+namespace UnitTests.TestModels
 {
     public class StreetDto
     {

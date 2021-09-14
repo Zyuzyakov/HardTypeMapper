@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 using Exceptions.ForCollectionRules;
 using HardTypeMapper.CollectionRules;
 using Interfaces.CollectionRules;
+using UnitTests.TestModels;
+using System.Linq;
 
 namespace UnitTests.CollectionRulesMethodTests
 {
@@ -140,6 +142,34 @@ namespace UnitTests.CollectionRulesMethodTests
             Assert.NotNull(rule);
 
             Assert.Equal(exprRule, rule);
+        }
+
+        [Fact]
+        public void GetRules_Correct_ReturnEmpty()
+        {
+            var collectionRules = new CollectionRules();
+
+            var rules = collectionRules.GetRules<Street, StreetDto>();
+
+            Assert.Empty(rules);
+        }
+
+        [Fact]
+        public void GetRules_Correct_ReturnRules()
+        {
+            var collectionRules = new CollectionRules();
+
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> expr = (x, y) => new StreetDto();
+
+            collectionRules.AddRule(expr);
+
+            var rules = collectionRules.GetRules<Street, StreetDto>();
+
+            Assert.Single(rules);
+
+            collectionRules.AddRule(expr, "test");
+
+            Assert.Equal(2, rules.ToList().Count());
         }
         #endregion
     }

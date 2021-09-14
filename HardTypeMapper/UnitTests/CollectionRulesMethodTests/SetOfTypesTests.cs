@@ -1,5 +1,6 @@
 ﻿using HardTypeMapper.CollectionRules;
 using System.Linq;
+using UnitTests.TestModels;
 using Xunit;
 
 namespace UnitTests.CollectionRulesMethodTests
