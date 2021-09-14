@@ -6,22 +6,24 @@ namespace Interfaces
 {
     public interface ICollectionRules
     {
-        ICollectionRules AddRule<TFrom, TTo>(Expression<Func<TFrom, TTo>> expressionMaping);
+        ICollectionRules AddRule<TFrom, TTo>(Expression<Func<ICollectionRules, TFrom, TTo>> expressionMaping, string nameRule = null);
 
-        ICollectionRules AddRule<TFrom, TTo>(Expression<Func<TFrom, TTo>> expressionMaping, string nameRule);
+        ICollectionRules AddRule<TFrom1, TFrom2, TTo>(Expression<Func<ICollectionRules, TFrom1, TFrom2, TTo>> expressionMaping, string nameRule = null);
 
-        Expression<Func<TFrom, TTo>> GetFirstRule<TFrom, TTo>();
+        ICollectionRules AddRule<TFrom1, TFrom2, TFrom3, TTo>(Expression<Func<ICollectionRules, TFrom1, TFrom2, TFrom3, TTo>> expressionMaping, string nameRule = null);
 
-        Expression<Func<TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule);
 
-        IEnumerable<Expression<Func<TFrom, TTo>>> GetRules<TFrom, TTo>();
 
-        void DeleteRule<TFrom, TTo>();
+        Expression<Func<ICollectionRules, TFrom, TTo>> GetAnyRule<TFrom, TTo>();
 
-        void DeleteRule<TFrom, TTo>(string nameRule);
+        Expression<Func<ICollectionRules, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null);
 
-        bool RuleExist<TFrom, TTo>();
+        IEnumerable<Expression<Func<ICollectionRules, TFrom, TTo>>> GetRules<TFrom, TTo>();
 
-        bool RuleExist<TFrom, TTo>(string nameRule);
+
+
+        void DeleteRule<TFrom, TTo>(string nameRule = null);
+
+        bool RuleExist<TFrom, TTo>(string nameRule = null);
     }
 }
