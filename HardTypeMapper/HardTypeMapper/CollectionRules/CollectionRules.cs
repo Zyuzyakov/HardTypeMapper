@@ -44,9 +44,9 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        public Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule)
+        public Expression<Func<ICollectionRulesOneIn, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null)
         {
-            if (string.IsNullOrEmpty(nameRule))
+            if (string.Empty == nameRule)
                 throw new ArgumentNullException(nameof(nameRule));
 
             if (!RuleExist<TFrom, TTo>(nameRule))
@@ -62,11 +62,17 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        public IEnumerable<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>> GetRules<TFrom, TTo>()
+        public Dictionary<string, Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>> GetRules<TFrom, TTo>()
         {
             var key = GetSetOfTypes<TTo>(null, typeof(TFrom));
 
-            return GetRule<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(key);
+            var dictReturn = new Dictionary<string, Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>();
+
+            foreach (var pair in dictRuleExpression)
+                if (pair.Key.Equals(key, true))
+                    dictReturn.Add(pair.Key.SetName, ConvertExpression<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(pair.Value));
+
+            return dictReturn;
         }
         #endregion
 
@@ -139,11 +145,7 @@ namespace HardTypeMapper.CollectionRules
         private IEnumerable<TRuleExpr> GetRule<TRuleExpr>(ISetOfTypes key) where TRuleExpr : Expression
         {
             Func<KeyValuePair<ISetOfTypes, Expression>, bool> equals =
-                pair => string.IsNullOrEmpty(pair.Key.SetName)
-                ?
-                pair.Key.Equals(key, false)
-                :
-                pair.Key.Equals(key, true);
+                pair => pair.Key.Equals(key, false);
 
             foreach (var item in dictRuleExpression)
                 if (equals(item))

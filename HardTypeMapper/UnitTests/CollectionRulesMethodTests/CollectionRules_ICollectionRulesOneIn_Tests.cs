@@ -111,11 +111,9 @@ namespace UnitTests.CollectionRulesMethodTests
         }
 
         [Fact]
-        public void GetRule_WhenEmptyOrNullParam_ThrowArgumentNullException()
+        public void GetRule_WhenEmptyParam_ThrowArgumentNullException()
         {
             var collectionRules = new CollectionRules();
-
-            Assert.Throws<ArgumentNullException>(() => collectionRules.GetRule<Street, StreetDto>(null));
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.GetRule<Street, StreetDto>(string.Empty));
         }
@@ -129,7 +127,7 @@ namespace UnitTests.CollectionRulesMethodTests
         }
 
         [Fact]
-        public void GetRule_Correct()
+        public void GetRule_WithName_Correct()
         {
             var collectionRules = new CollectionRules();
 
@@ -142,6 +140,46 @@ namespace UnitTests.CollectionRulesMethodTests
             Assert.NotNull(rule);
 
             Assert.Equal(exprRule, rule);
+        }
+
+        [Fact]
+        public void GetRule_WithOutName_Correct()
+        {
+            var collectionRules = new CollectionRules();
+
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+
+            collectionRules.AddRule(exprRule);
+
+            var rule = collectionRules.GetRule<Street, StreetDto>();
+
+            Assert.NotNull(rule);
+
+            Assert.Equal(exprRule, rule);
+        }
+
+        [Fact]
+        public void GetRule_NameAddGetWithOutName_ThrowRuleNotExistException()
+        {
+            var collectionRules = new CollectionRules();
+
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+
+            collectionRules.AddRule(exprRule, "test");
+
+            Assert.Throws<RuleNotExistException>(() => collectionRules.GetRule<Street, StreetDto>());
+        }
+
+        [Fact]
+        public void GetRule_NameNullGetWithName_ThrowRuleNotExistException()
+        {
+            var collectionRules = new CollectionRules();
+
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+
+            collectionRules.AddRule(exprRule);
+
+            Assert.Throws<RuleNotExistException>(() => collectionRules.GetRule<Street, StreetDto>("test"));
         }
 
         [Fact]
@@ -169,7 +207,37 @@ namespace UnitTests.CollectionRulesMethodTests
 
             collectionRules.AddRule(expr, "test");
 
+            rules = collectionRules.GetRules<Street, StreetDto>();
+
             Assert.Equal(2, rules.ToList().Count());
+        }
+        #endregion
+
+        #region Exist and Delete methods
+        [Fact]
+        public void RuleExist_WhenRuleNameEmpty_ThrowArgumentException()
+        {
+            var collectionRules = new CollectionRules();
+
+            Assert.Throws<ArgumentException>(() => collectionRules.RuleExist<Street, StreetDto>(""));
+        }
+
+        [Fact]
+        public void RuleExist_Correct()
+        {
+            var collectionRules = new CollectionRules();
+
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+
+            Assert.False(collectionRules.RuleExist<Street, StreetDto>());
+
+            collectionRules.AddRule(exprRule, "test");
+
+            Assert.True(collectionRules.RuleExist<Street, StreetDto>("test"));
+
+            Assert.False(collectionRules.RuleExist<Street, StreetDto>());
+
+            Assert.False(collectionRules.RuleExist<Street, StreetDto>("notExist"));
         }
         #endregion
     }
