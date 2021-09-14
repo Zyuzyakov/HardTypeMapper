@@ -215,29 +215,63 @@ namespace UnitTests.CollectionRulesMethodTests
 
         #region Exist and Delete methods
         [Fact]
-        public void RuleExist_WhenRuleNameEmpty_ThrowArgumentException()
+        public void ExistRule_WhenRuleNameEmpty_ThrowArgumentException()
         {
             var collectionRules = new CollectionRules();
 
-            Assert.Throws<ArgumentException>(() => collectionRules.RuleExist<Street, StreetDto>(""));
+            Assert.Throws<ArgumentException>(() => collectionRules.ExistRule<Street, StreetDto>(""));
         }
 
         [Fact]
-        public void RuleExist_Correct()
+        public void ExistRule_Correct()
         {
             var collectionRules = new CollectionRules();
 
             Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
 
-            Assert.False(collectionRules.RuleExist<Street, StreetDto>());
+            Assert.False(collectionRules.ExistRule<Street, StreetDto>());
 
             collectionRules.AddRule(exprRule, "test");
 
-            Assert.True(collectionRules.RuleExist<Street, StreetDto>("test"));
+            Assert.True(collectionRules.ExistRule<Street, StreetDto>("test"));
 
-            Assert.False(collectionRules.RuleExist<Street, StreetDto>());
+            Assert.False(collectionRules.ExistRule<Street, StreetDto>());
 
-            Assert.False(collectionRules.RuleExist<Street, StreetDto>("notExist"));
+            Assert.False(collectionRules.ExistRule<Street, StreetDto>("notExist"));
+        }
+
+        [Fact]
+        public void DeleteRule_WhenParamEmpty_ThrowArgumentException()
+        {
+            var collectionRules = new CollectionRules();
+
+            Assert.Throws<ArgumentException>(() => collectionRules.DeleteRule<Street, StreetDto>(string.Empty));
+        }
+
+        [Fact]
+        public void DeleteRule_WhenParamGood_ThrowRuleNotExistException()
+        {
+            var collectionRules = new CollectionRules();
+
+            Assert.Throws<RuleNotExistException>(() => collectionRules.DeleteRule<Street, StreetDto>());
+            Assert.Throws<RuleNotExistException>(() => collectionRules.DeleteRule<Street, StreetDto>(null));
+            Assert.Throws<RuleNotExistException>(() => collectionRules.DeleteRule<Street, StreetDto>("test"));
+        }
+
+        [Fact]
+        public void DeleteRule_WhenParamGood_Correct()
+        {
+            var collectionRules = new CollectionRules();
+         
+            Expression<Func<ICollectionRulesOneIn, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+
+            collectionRules.AddRule(exprRule, "test");
+
+            collectionRules.DeleteRule<Street, StreetDto>("test");
+
+            collectionRules.AddRule(exprRule);
+
+            collectionRules.DeleteRule<Street, StreetDto>();
         }
         #endregion
     }

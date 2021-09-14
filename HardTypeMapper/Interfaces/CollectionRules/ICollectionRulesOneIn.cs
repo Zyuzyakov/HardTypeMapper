@@ -16,6 +16,6 @@ namespace Interfaces.CollectionRules
 
         void DeleteRule<TFrom, TTo>(string nameRule = null);
 
-        bool RuleExist<TFrom, TTo>(string nameRule = null);
+        bool ExistRule<TFrom, TTo>(string nameRule = null);
     }
 }

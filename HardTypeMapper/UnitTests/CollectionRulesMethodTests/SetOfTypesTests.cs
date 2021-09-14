@@ -88,8 +88,8 @@ namespace UnitTests.CollectionRulesMethodTests
             Assert.Equal(typeof(Street), setOfTypes2.GetOutTypeParam());
 
             Assert.False(setOfTypes1.Equals(setOfTypes2));
-            Assert.True(setOfTypes1.Equals(setOfTypes2, true));
-            Assert.False(setOfTypes1.Equals(setOfTypes2, false));
+            Assert.True(setOfTypes1.Equals(setOfTypes2, false));
+            Assert.False(setOfTypes1.Equals(setOfTypes2, true));
         }
     }
 }

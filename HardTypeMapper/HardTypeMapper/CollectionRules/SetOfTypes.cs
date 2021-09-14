@@ -10,7 +10,7 @@ namespace HardTypeMapper.CollectionRules
 
         string SetName { get; }
 
-        bool Equals(object obj, bool withOutName);
+        bool Equals(object obj, bool withName);
     }
 
     public struct SetOfTypes<TOutType> : ISetOfTypes
@@ -66,11 +66,11 @@ namespace HardTypeMapper.CollectionRules
             return false;
         }
 
-        public bool Equals(object obj, bool withOutName)
+        public bool Equals(object obj, bool withName)
         {
-            if (withOutName)
-                return EqualsWithOutName(obj);
-            else return Equals(obj);
+            if (withName)
+                return Equals(obj);
+            else return EqualsWithOutName(obj);
         }
 
         private bool EqualsWithOutName(object obj)

@@ -49,7 +49,7 @@ namespace HardTypeMapper.CollectionRules
             if (string.Empty == nameRule)
                 throw new ArgumentNullException(nameof(nameRule));
 
-            if (!RuleExist<TFrom, TTo>(nameRule))
+            if (!ExistRule<TFrom, TTo>(nameRule))
                 throw new RuleNotExistException(nameRule);
 
             var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom));
@@ -69,7 +69,7 @@ namespace HardTypeMapper.CollectionRules
             var dictReturn = new Dictionary<string, Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>();
 
             foreach (var pair in dictRuleExpression)
-                if (pair.Key.Equals(key, true))
+                if (pair.Key.Equals(key, false))
                     dictReturn.Add(pair.Key.SetName, ConvertExpression<Expression<Func<ICollectionRulesOneIn, TFrom, TTo>>>(pair.Value));
 
             return dictReturn;
@@ -77,7 +77,7 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Exist and Delete methods
-        public bool RuleExist<TFrom, TTo>(string nameRule = null)
+        public bool ExistRule<TFrom, TTo>(string nameRule = null)
         {
             if (string.Empty == nameRule)
                 throw new ArgumentException($"Параметр <{nameof(nameRule)}> может быть равным null, но не может быть равным string.Empty.");
@@ -94,15 +94,8 @@ namespace HardTypeMapper.CollectionRules
 
             var key = GetSetOfTypes<TTo>(nameRule, typeof(TFrom));
 
-            Func<KeyValuePair<ISetOfTypes, Expression>, bool> equals =
-               pair => string.IsNullOrEmpty(pair.Key.SetName)
-               ?
-               pair.Key.Equals(key, false)
-               :
-               pair.Key.Equals(key, true);
-
             foreach (var item in dictRuleExpression)
-                if (equals(item))
+                if (equals(item, key, true))
                 {
                     dictRuleExpression.Remove(item.Key);
 
@@ -114,6 +107,9 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Class private methods
+        Func<KeyValuePair<ISetOfTypes, Expression>, ISetOfTypes, bool, bool> equals =
+               (pair, existKey, withName) => pair.Key.Equals(existKey, withName);
+
         SetOfTypes<TOutType> GetSetOfTypes<TOutType>(string nameRule, params Type[] inTypes)
         {
             if (inTypes is null || inTypes.Length < 1)
@@ -144,11 +140,8 @@ namespace HardTypeMapper.CollectionRules
 
         private IEnumerable<TRuleExpr> GetRule<TRuleExpr>(ISetOfTypes key) where TRuleExpr : Expression
         {
-            Func<KeyValuePair<ISetOfTypes, Expression>, bool> equals =
-                pair => pair.Key.Equals(key, false);
-
             foreach (var item in dictRuleExpression)
-                if (equals(item))
+                if (equals(item, key, true))
                     yield return ConvertExpression<TRuleExpr>(item.Value);
         }
         #endregion
