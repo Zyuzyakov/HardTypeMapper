@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HardTypeMapper.CollectionRules
+namespace HardTypeMapper.Models.CollectionModels
 {
     public interface ISetOfTypes
     {
         Type GetOutTypeParam();
+
+        Type[] GetInTypeParams();
 
         string SetName { get; }
 
@@ -93,6 +95,11 @@ namespace HardTypeMapper.CollectionRules
                     return false;
 
             return true;
+        }
+
+        public  Type[] GetInTypeParams()
+        {
+            return InTypes.ToArray();
         }
     }
 }
