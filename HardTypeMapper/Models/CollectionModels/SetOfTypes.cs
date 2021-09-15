@@ -20,29 +20,31 @@ namespace HardTypeMapper.Models.CollectionModels
         public SetOfTypes(Type inType, string nameRule = null)
         {
             SetName = nameRule ?? string.Empty;
-            _inTypes = new HashSet<Type>();
-            _inTypes.Add(inType);
+            inTypes = new HashSet<Type>
+            {
+                inType
+            };
         }
 
         public SetOfTypes(string nameRule, params Type[] inTypes)
         {
             SetName = nameRule ?? string.Empty;
-            _inTypes = new HashSet<Type>();
+            this.inTypes = new HashSet<Type>();
             foreach (var param in inTypes)
-                _inTypes.Add(param);
+                this.inTypes.Add(param);
         }
 
         public readonly string SetName { get; }
 
-        private HashSet<Type> _inTypes { get; set; }
+        private HashSet<Type> inTypes { get; set; }
 
         public IEnumerable<Type> InTypes
         {
             get
             {
-                var arrayTypes = new Type[_inTypes?.Count ?? 0];
+                var arrayTypes = new Type[inTypes?.Count ?? 0];
 
-                _inTypes?.CopyTo(arrayTypes);
+                inTypes?.CopyTo(arrayTypes);
 
                 return arrayTypes;
             }
@@ -51,6 +53,11 @@ namespace HardTypeMapper.Models.CollectionModels
         public Type GetOutTypeParam()
         {
             return typeof(TOutType);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -66,7 +73,7 @@ namespace HardTypeMapper.Models.CollectionModels
             }
 
             return false;
-        }
+        }       
 
         public bool Equals(object obj, bool withName)
         {

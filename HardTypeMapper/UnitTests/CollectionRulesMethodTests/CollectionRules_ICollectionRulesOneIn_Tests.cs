@@ -39,7 +39,9 @@ namespace UnitTests.CollectionRulesMethodTests
 
             Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
-            collectionRules.AddRule(expr);
+            var iRulesAdd = collectionRules.AddRule(expr);
+
+            Assert.NotNull(iRulesAdd);
         }
 
         [Fact]
@@ -73,7 +75,9 @@ namespace UnitTests.CollectionRulesMethodTests
 
             Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
-            collectionRules.AddRule(expr, "test");
+            var iRulesAdd = collectionRules.AddRule(expr, "test");
+
+            Assert.NotNull(iRulesAdd);
         }
 
         [Fact]
@@ -205,7 +209,7 @@ namespace UnitTests.CollectionRulesMethodTests
 
             rules = collectionRules.GetRules<Street, StreetDto>();
 
-            Assert.Equal(2, rules.ToList().Count());
+            Assert.Equal(2, rules.ToList().Count);
         }
         #endregion
 
@@ -262,12 +266,14 @@ namespace UnitTests.CollectionRulesMethodTests
             Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
 
             collectionRules.AddRule(exprRule, "test");
-
+            Assert.True(collectionRules.ExistRule<Street, StreetDto>("test"));
             collectionRules.DeleteRule<Street, StreetDto>("test");
+            Assert.False(collectionRules.ExistRule<Street, StreetDto>("test"));
 
             collectionRules.AddRule(exprRule);
-
+            Assert.True(collectionRules.ExistRule<Street, StreetDto>());
             collectionRules.DeleteRule<Street, StreetDto>();
+            Assert.False(collectionRules.ExistRule<Street, StreetDto>());
         }
         #endregion
     }

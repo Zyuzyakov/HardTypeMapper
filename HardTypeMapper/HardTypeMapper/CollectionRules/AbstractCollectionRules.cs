@@ -103,13 +103,13 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Class private methods
-        private Func<KeyValuePair<ISetOfTypes, Expression>, ISetOfTypes, bool, bool> equals =
+        private readonly Func<KeyValuePair<ISetOfTypes, Expression>, ISetOfTypes, bool, bool> equals =
                (pair, existKey, withName) => pair.Key.Equals(existKey, withName);
            
         private protected TRuleExpr ConvertExpression<TRuleExpr>(Expression expr) where TRuleExpr : Expression
         {
-            if (expr is TRuleExpr)
-                return (TRuleExpr)expr;
+            if (expr is TRuleExpr exprConverted)
+                return exprConverted;
 
             throw new ExpressionNotNeededTypeException(typeof(TRuleExpr).FullName);
         }
