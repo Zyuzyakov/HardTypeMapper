@@ -4,7 +4,7 @@ using System.Linq;
 using UnitTests.TestModels;
 using Xunit;
 
-namespace UnitTests.CollectionRulesMethodTests
+namespace UnitTests.ModelsTests
 {
     public class SetOfTypesTests
     {

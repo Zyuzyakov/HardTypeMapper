@@ -61,7 +61,7 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        public Dictionary<string, Expression> GetRules(ISetOfTypes setOfTypes, bool withName)
+        protected Dictionary<string, Expression> GetRules(ISetOfTypes setOfTypes, bool withName)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));

@@ -6,6 +6,7 @@ using HardTypeMapper.CollectionRules;
 using Interfaces.CollectionRules;
 using UnitTests.TestModels;
 using System.Linq;
+using Interfaces.MapMethods;
 
 namespace UnitTests.CollectionRulesMethodTests
 {
@@ -27,7 +28,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = null;
+            Expression<Func<IMapMethods, Street, StreetDto>> expr = null;
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr));
         }
@@ -37,7 +38,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             var iRulesAdd = collectionRules.AddRule(expr);
 
@@ -49,7 +50,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             collectionRules.AddRule(expr);
 
@@ -61,7 +62,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = null;
+            Expression<Func<IMapMethods, Street, StreetDto>> expr = null;
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr, null));
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr, string.Empty));
@@ -73,7 +74,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             var iRulesAdd = collectionRules.AddRule(expr, "test");
 
@@ -85,7 +86,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
 
             collectionRules.AddRule(expr, "test");
 
@@ -135,7 +136,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
 
             collectionRules.AddRule(exprRule, "test");
 
@@ -149,7 +150,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (mm, street) => new StreetDto();
 
             collectionRules.AddRule(exprRule);
 
@@ -163,7 +164,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (mm, street) => new StreetDto();
 
             collectionRules.AddRule(exprRule, "test");
 
@@ -175,41 +176,11 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (mm, street) => new StreetDto();
 
             collectionRules.AddRule(exprRule);
 
             Assert.Throws<RuleNotExistException>(() => collectionRules.GetRule<Street, StreetDto>("test"));
-        }
-
-        [Fact]
-        public void GetRules_Correct_ReturnEmpty()
-        {
-            var collectionRules = new CollectionRules();
-
-            var rules = collectionRules.GetRules<Street, StreetDto>();
-
-            Assert.Empty(rules);
-        }
-
-        [Fact]
-        public void GetRules_Correct_ReturnRules()
-        {
-            var collectionRules = new CollectionRules();
-
-            Expression<Func<IRulesGet, Street, StreetDto>> expr = (x, y) => new StreetDto();
-
-            collectionRules.AddRule(expr);
-
-            var rules = collectionRules.GetRules<Street, StreetDto>();
-
-            Assert.Single(rules);
-
-            collectionRules.AddRule(expr, "test");
-
-            rules = collectionRules.GetRules<Street, StreetDto>();
-
-            Assert.Equal(2, rules.ToList().Count);
         }
         #endregion
 
@@ -227,7 +198,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
 
             Assert.False(collectionRules.ExistRule<Street, StreetDto>());
 
@@ -263,7 +234,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
          
-            Expression<Func<IRulesGet, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
 
             collectionRules.AddRule(exprRule, "test");
             Assert.True(collectionRules.ExistRule<Street, StreetDto>("test"));

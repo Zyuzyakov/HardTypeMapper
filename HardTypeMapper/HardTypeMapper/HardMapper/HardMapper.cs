@@ -14,6 +14,7 @@ namespace HardTypeMapper
             _collectionRules = collectionRules ?? throw new System.ArgumentNullException(nameof(collectionRules));
         }
 
+        #region MapObjects methods
         public TTo Map<TFrom, TTo>(TFrom from, string nameRule = null)
         {
             throw new System.NotImplementedException();
@@ -23,6 +24,7 @@ namespace HardTypeMapper
         {
             throw new System.NotImplementedException();
         }
+        #endregion
 
         public IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from, string nameRule = null)
         {
