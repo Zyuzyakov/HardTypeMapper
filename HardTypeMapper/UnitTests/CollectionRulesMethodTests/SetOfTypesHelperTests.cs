@@ -22,8 +22,6 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var setOfTypes = SetOfTypesHelper.Create<StreetDto>("test", typeof(Street), typeof(House));
 
-            Assert.NotNull(setOfTypes);
-
             Assert.Equal("test", setOfTypes.SetName);
             Assert.Equal(typeof(StreetDto), setOfTypes.GetOutTypeParam());
           
