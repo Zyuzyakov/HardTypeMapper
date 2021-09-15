@@ -103,7 +103,7 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Class private methods
-        Func<KeyValuePair<ISetOfTypes, Expression>, ISetOfTypes, bool, bool> equals =
+        private Func<KeyValuePair<ISetOfTypes, Expression>, ISetOfTypes, bool, bool> equals =
                (pair, existKey, withName) => pair.Key.Equals(existKey, withName);
            
         private protected TRuleExpr ConvertExpression<TRuleExpr>(Expression expr) where TRuleExpr : Expression
@@ -114,7 +114,7 @@ namespace HardTypeMapper.CollectionRules
             throw new ExpressionNotNeededTypeException(typeof(TRuleExpr).FullName);
         }
 
-        private protected IEnumerable<TRuleExpr> GetRules<TRuleExpr>(ISetOfTypes key, bool checkName) where TRuleExpr : Expression
+        protected IEnumerable<TRuleExpr> GetRules<TRuleExpr>(ISetOfTypes key, bool checkName) where TRuleExpr : Expression
         {
             foreach (var item in dictRuleExpression)
                 if (equals(item, key, checkName))

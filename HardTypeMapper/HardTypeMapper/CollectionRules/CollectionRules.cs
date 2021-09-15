@@ -1,5 +1,4 @@
-﻿using Exceptions.ForCollectionRules;
-using HardTypeMapper.Models.CollectionModels;
+﻿using HardTypeMapper.Models.CollectionModels;
 using Interfaces.CollectionRules;
 using System;
 using System.Collections.Generic;
