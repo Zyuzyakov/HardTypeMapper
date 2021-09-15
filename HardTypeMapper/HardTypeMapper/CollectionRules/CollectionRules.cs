@@ -18,6 +18,10 @@ namespace HardTypeMapper.CollectionRules
 
             return this;
         }
+        public IRulesAdd AddRule<TFrom1, TFrom2, TTo>(Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>> expressionMaping, string nameRule = null)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Get methods
@@ -26,6 +30,10 @@ namespace HardTypeMapper.CollectionRules
             var key = SetOfTypesHelper.Create<TTo>(null, typeof(TFrom));
 
             return ConvertExpression<Expression<Func<IRulesGet, TFrom, TTo>>>(GetAnyRule(key));
+        }
+        public Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>> GetAnyRule<TFrom1, TFrom2, TTo>()
+        {
+            throw new NotImplementedException();
         }
 
         public Expression<Func<IRulesGet, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null)
@@ -36,6 +44,10 @@ namespace HardTypeMapper.CollectionRules
             var key = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
 
             return ConvertExpression<Expression<Func<IRulesGet, TFrom, TTo>>>(GetRule(key));
+        }
+        public Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>> GetRule<TFrom1, TFrom2, TTo>(string nameRule = null)
+        {
+            throw new NotImplementedException();
         }
 
         public Dictionary<string, Expression<Func<IRulesGet, TFrom, TTo>>> GetRules<TFrom, TTo>()
@@ -51,9 +63,13 @@ namespace HardTypeMapper.CollectionRules
 
             return dictReturn;
         }
+        public Dictionary<string, Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>>> GetRules<TFrom1, TFrom2, TTo>()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
-        #region Exist and Delete methods
+        #region Exist methods
         public bool ExistRule<TFrom, TTo>(string nameRule = null)
         {
             if (string.Empty == nameRule)
@@ -63,7 +79,13 @@ namespace HardTypeMapper.CollectionRules
 
             return GetRules(key, true).Any();
         }
+        public bool ExistRule<TFrom1, TFrom2, TTo>(string nameRule = null)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
+        #region Delete methods
         public void DeleteRule<TFrom, TTo>(string nameRule = null)
         {
             if (string.Empty == nameRule)
@@ -73,32 +95,6 @@ namespace HardTypeMapper.CollectionRules
 
             DeleteRule(key);
         }
-
-        public IRulesAdd AddRule<TFrom1, TFrom2, TTo>(Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>> expressionMaping, string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>> GetAnyRule<TFrom1, TFrom2, TTo>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>> GetRule<TFrom1, TFrom2, TTo>(string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Dictionary<string, Expression<Func<IRulesGet, TFrom1, TFrom2, TTo>>> GetRules<TFrom1, TFrom2, TTo>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ExistRule<TFrom1, TFrom2, TTo>(string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteRule<TFrom1, TFrom2, TTo>(string nameRule = null)
         {
             throw new NotImplementedException();
