@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace HardTypeMapper.CollectionRules
 {
-    public class CollectionRules : AbstractCollectionRules, ISummaryCollectionRules
+    public class CollectionRules : AbstractCollectionRules, ICollectionRules
     {     
         #region Add methods
         public IRulesAdd AddRule<TFrom, TTo>(Expression<Func<IRulesGet, TFrom, TTo>> expressionMaping, string nameRule = null)

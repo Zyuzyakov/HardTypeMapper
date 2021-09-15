@@ -15,7 +15,7 @@ namespace UnitTests.CollectionRulesMethodTests
         [Fact]
         public void VoidConstructor_Correct()
         {
-            ISummaryCollectionRules collectionRules = new CollectionRules();
+            ICollectionRules collectionRules = new CollectionRules();
 
             Assert.NotNull(collectionRules);
         }
