@@ -84,7 +84,7 @@ namespace HardTypeMapper.Models.CollectionModels
 
         private bool EqualsWithOutName(object obj)
         {
-            if (!(obj is SetOfTypes<TOutType>))
+            if (obj is not SetOfTypes<TOutType>)
                 return false;
 
             var equalsObj = (SetOfTypes<TOutType>)obj;
