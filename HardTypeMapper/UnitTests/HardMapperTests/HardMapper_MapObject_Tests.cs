@@ -8,7 +8,7 @@ using Xunit;
 
 namespace UnitTests.HardMapperTests
 {
-    public class HardMapperTests
+    public class HardMapper_MapObject_Tests
     {
         private ICollectionRules collectionRules;
         private HardMapper hardMapper;
