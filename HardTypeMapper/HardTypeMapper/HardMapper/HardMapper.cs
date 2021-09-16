@@ -105,7 +105,7 @@ namespace HardTypeMapper
 
             if (mapInfo is null)
                 _mapInfos.Add(new MapInfo(fromThisClass, callFromCollection, rule));
-            else if (callFromCollection && fromThisClass)
+            else if (fromThisClass)
                 return false;
 
             return true;
