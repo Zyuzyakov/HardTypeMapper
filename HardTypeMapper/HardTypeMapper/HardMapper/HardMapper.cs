@@ -25,7 +25,7 @@ namespace HardTypeMapper
             if (from is null)
                 return default;
 
-            var fromThisClass = CallFromThisClass();
+            var fromThisClass = CallFromThisClass(false);
 
             var rule = _collectionRules.GetRule<TFrom, TTo>();
 
@@ -55,7 +55,7 @@ namespace HardTypeMapper
             if (from is null)
                 yield break;
 
-            var fromThisClass = CallFromThisClass();
+            var fromThisClass = CallFromThisClass(true);
 
             var rule = _collectionRules.GetRule<TFrom, TTo>();
 
@@ -64,7 +64,8 @@ namespace HardTypeMapper
                 var ruleFunc = rule.Compile();
 
                 foreach (var item in from)
-                    yield return ruleFunc(this, item);
+                    if (item is not null)
+                        yield return ruleFunc(this, item);
             }
         }
         public IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from, string nameRule)
@@ -81,12 +82,14 @@ namespace HardTypeMapper
         #endregion
 
         #region Class private methods
-        private bool CallFromThisClass()
+        private bool CallFromThisClass(bool fromCollection)
         {
             var st = new StackTrace();
             var frames = st.GetFrames();
 
-            for (int i = 2; i < frames.Length; i++)
+            int startFrom = fromCollection ? 1 : 2;
+
+            for (int i = startFrom; i < frames.Length; i++)
             {           
                 var method = frames[i].GetMethod();
 
@@ -104,8 +107,10 @@ namespace HardTypeMapper
             var mapInfo = GetMapInfo(rule);
 
             if (mapInfo is null)
-                _mapInfos.Add(new MapInfo(fromThisClass, callFromCollection, rule));
-            else if (fromThisClass)
+                _mapInfos.Add(new MapInfo(!fromThisClass, callFromCollection, rule));
+            else if (fromThisClass && mapInfo.ItRootMapper)
+                return false;
+            else if (fromThisClass && mapInfo.FirstCallFromCollection != callFromCollection)
                 return false;
 
             return true;

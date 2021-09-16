@@ -1,6 +1,7 @@
 ﻿using HardTypeMapper;
 using HardTypeMapper.CollectionRules;
 using Interfaces.CollectionRules;
+using Interfaces.MapMethods;
 using System.Collections.Generic;
 using System.Linq;
 using UnitTests.TestModels;
@@ -11,7 +12,7 @@ namespace UnitTests.HardMapperTests
     public class HardMapper_MapObject_Tests
     {
         private ICollectionRules collectionRules;
-        private HardMapper hardMapper;
+        private IMapMethods hardMapper;
 
         Street street;
         House house;
