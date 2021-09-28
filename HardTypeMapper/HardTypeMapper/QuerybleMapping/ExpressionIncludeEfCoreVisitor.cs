@@ -8,7 +8,7 @@ using System.Reflection;
 namespace HardTypeMapper.IQuerybleMapping
 {
     // Обходит дерево выражений и находит все Include/ThenInclude
-    public class ExpressionIncludeVisitor : ExpressionVisitor, IIncludeInfo
+    public class ExpressionIncludeEfCoreVisitor : ExpressionVisitor, IIncludeInfo
     {
         private List<IncludeProps> includeTypes = new List<IncludeProps>();
         private IncludeProps includeInfo = new IncludeProps();
