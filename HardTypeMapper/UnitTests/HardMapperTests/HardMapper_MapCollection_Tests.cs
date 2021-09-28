@@ -159,7 +159,7 @@ namespace UnitTests.HardMapperTests
 
             var streetsDtos = hardMapper.Map<Street, StreetDto>(listStreets).ToList();
 
-            Assert.Single(listStreets);
+            Assert.Single(streetsDtos);
             var streetDto = streetsDtos.First(x => x.Name == "street");
             Assert.Equal(2, streetDto.HousesDto.Count);
 
