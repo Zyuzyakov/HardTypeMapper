@@ -1,6 +1,8 @@
-﻿using Interfaces.CollectionRules;
+﻿using HardTypeMapper.IQuerybleMapping;
+using Interfaces.CollectionRules;
 using Interfaces.MapMethods;
 using Models.HardMapperModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace HardTypeMapper
     {
         private readonly List<MapInfo> _mapInfos;
         private readonly ICollectionRules _collectionRules;
+        protected List<IncludeProps> IncludeProps;
 
         public HardMapper(ICollectionRules collectionRules)
         {
@@ -77,7 +80,16 @@ namespace HardTypeMapper
         #region MapQuery
         public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, string nameRule = null)
         {
-            throw new System.NotImplementedException();
+            if (from is null)
+                throw new ArgumentNullException(nameof(from));
+
+            VisitExpression(from.Expression);
+
+            var fromThisClass = CallFromThisClass(true);
+
+            var rule = _collectionRules.GetRule<TFrom, TTo>();
+
+            return from.Select(x => rule.Compile()(this, x));
         }
         #endregion
 
@@ -119,6 +131,13 @@ namespace HardTypeMapper
         }
 
         private MapInfo GetMapInfo(Expression expr) => _mapInfos.FirstOrDefault(x => x.Expr == expr);
+
+        private void VisitExpression(Expression expr)
+        {
+            var visitor = new ExpressionIncludeVisitor();
+            visitor.Visit(expr);
+            IncludeProps = visitor.GetIncludeTypesAndClear();
+        }
         #endregion
     }
 }

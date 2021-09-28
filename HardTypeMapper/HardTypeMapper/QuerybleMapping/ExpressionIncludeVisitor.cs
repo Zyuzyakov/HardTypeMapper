@@ -15,6 +15,19 @@ namespace HardTypeMapper.IQuerybleMapping
         private const string INCLUDE = "Include";
         private const string THENINCLUDE = "ThenInclude";
 
+        public List<IncludeProps> GetIncludeTypesAndClear()
+        {
+            nowInIncludeCall = false;
+
+            includeInfo = new IncludeProps();
+
+            var retutnList = includeTypes;
+
+            includeTypes = new List<IncludeProps>();
+
+            return retutnList;
+        }
+
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             if (node.Object != null)
@@ -75,19 +88,6 @@ namespace HardTypeMapper.IQuerybleMapping
         protected Type GetClassInclude(MemberInfo memberInfo)
         {
             return memberInfo.ReflectedType;
-        }
-
-        public List<IncludeProps> GetIncludeTypesAndClear()
-        {
-            nowInIncludeCall = false;
-
-            includeInfo = new IncludeProps();
-
-            var retutnList = includeTypes;
-
-            includeTypes = new List<IncludeProps>();
-
-            return retutnList;
         }
 
         private void AddIncludeInfo()
