@@ -86,39 +86,6 @@ namespace UnitTests.HardMapperTests
             house2.Flats = new List<Flat>() { flat2, flat3 };
         }
 
-        private void Init2()
-        {
-            collectionRules = new CollectionRules();
-
-            collectionRules.AddRule<Flat, FlatDto>((mm, flat) => new FlatDto()
-            {
-                Name = flat.Name,
-                HouseDto = mm.Map<House, HouseDto>(flat.House)
-            });
-
-            collectionRules.AddRule<House, HouseDto>((mm, house) => new HouseDto()
-            {
-                Name = house.Name,
-                StreetDto = mm.Map<Street, StreetDto>(house.Street),
-                FlatsDto = mm.Map<Flat, FlatDto>(house.Flats).ToList()
-            });
-
-            hardMapper = new HardMapper(collectionRules);
-
-            house = new House()
-            {
-                Name = "house",
-            };
-
-            flat = new Flat()
-            {
-                Name = "flat",
-                House = house,
-            };
-
-            house.Flats = new List<Flat>() { flat };
-        }
-
         [Fact]
         public void Map_FromFlatCollection_Correct()
         {
@@ -156,20 +123,62 @@ namespace UnitTests.HardMapperTests
         [Fact]
         public void Map_FromHouseCollection_Correct()
         {
-            Init2();
+            Init();
 
-            var listHouses = new List<House>() { house };
+            var listHouses = new List<House>() { house, house2 };
 
             var housesDtos = hardMapper.Map<House, HouseDto>(listHouses).ToList();
 
-            Assert.Equal(1, housesDtos.Count);
+            Assert.Equal(2, housesDtos.Count);
 
             var house1Dto = housesDtos.First(x => x.Name == "house");
 
-            Assert.NotNull(house1Dto);
             Assert.Single(house1Dto.FlatsDto);
             var house1Flat = house1Dto.FlatsDto.First();
             Assert.Null(house1Flat.HouseDto);
+            Assert.NotNull(house1Dto.StreetDto);
+            Assert.Empty(house1Dto.StreetDto.HousesDto);
+
+            var house2Dto = housesDtos.First(x => x.Name == "house2");
+
+            Assert.Equal(2, house2Dto.FlatsDto.Count());
+            var house2Flat2 = house2Dto.FlatsDto.First(x => x.Name == "flat2");
+            var house2Flat3 = house2Dto.FlatsDto.First(x => x.Name == "flat3");
+            Assert.Null(house2Flat2.HouseDto);
+            Assert.Null(house2Flat3.HouseDto);
+            Assert.NotNull(house2Dto.StreetDto);
+            Assert.Empty(house2Dto.StreetDto.HousesDto);
+        }
+
+        [Fact]
+        public void Map_FromStreetCollection_Correct()
+        {
+            Init();
+
+            var listStreets = new List<Street>() { street };
+
+            var streetsDtos = hardMapper.Map<Street, StreetDto>(listStreets).ToList();
+
+            Assert.Single(listStreets);
+            var streetDto = streetsDtos.First(x => x.Name == "street");
+            Assert.Equal(2, streetDto.HousesDto.Count);
+
+            var house1Dto = streetDto.HousesDto.First(x => x.Name == "house");
+            Assert.Null(house1Dto.StreetDto);
+            Assert.Single(house1Dto.FlatsDto);
+            var house1DtoFlat = house1Dto.FlatsDto.First();
+            Assert.NotNull(house1DtoFlat);
+            Assert.Null(house1DtoFlat.HouseDto);
+
+            var house2Dto = streetDto.HousesDto.First(x => x.Name == "house2");
+            Assert.Null(house2Dto.StreetDto);
+            Assert.Equal(2, house2Dto.FlatsDto.Count);
+            var house2DtoFlat2 = house2Dto.FlatsDto.First(x => x.Name == "flat2");
+            Assert.NotNull(house2DtoFlat2);
+            Assert.Null(house2DtoFlat2.HouseDto);
+            var house2DtoFlat3 = house2Dto.FlatsDto.First(x => x.Name == "flat3");
+            Assert.NotNull(house2DtoFlat3);
+            Assert.Null(house2DtoFlat3.HouseDto);
         }
     }
 }

@@ -112,9 +112,12 @@ namespace HardTypeMapper
                 return false;
             else if (fromThisClass && mapInfo.FirstCallFromCollection != callFromCollection)
                 return false;
+            else if (!callFromCollection && mapInfo.FirstCallFromCollection)
+                return false;
 
             return true;
         }
+
         private MapInfo GetMapInfo(Expression expr) => _mapInfos.FirstOrDefault(x => x.Expr == expr);
         #endregion
     }
