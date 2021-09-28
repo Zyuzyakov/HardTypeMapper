@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Interfaces.Includes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HardTypeMapper.IQuerybleMapping
 {
     // Обходит дерево выражений и находит все Include/ThenInclude
-    public class ExpressionIncludeVisitor : ExpressionVisitor
+    public class ExpressionIncludeVisitor : ExpressionVisitor, IIncludeInfo
     {
         private List<IncludeProps> includeTypes = new List<IncludeProps>();
         private IncludeProps includeInfo = new IncludeProps();
@@ -15,7 +17,14 @@ namespace HardTypeMapper.IQuerybleMapping
         private const string INCLUDE = "Include";
         private const string THENINCLUDE = "ThenInclude";
 
-        public List<IncludeProps> GetIncludeTypesAndClear()
+        public IList<IncludeProps> GetIncludes(IQueryable query)
+        {
+            Visit(query.Expression);
+
+            return GetIncludesAndClear();
+        }
+
+        protected List<IncludeProps> GetIncludesAndClear()
         {
             nowInIncludeCall = false;
 
@@ -95,6 +104,6 @@ namespace HardTypeMapper.IQuerybleMapping
             includeTypes.Add(includeInfo);
             nowInIncludeCall = false;
             includeInfo = new IncludeProps();
-        }
+        }        
     }
 }

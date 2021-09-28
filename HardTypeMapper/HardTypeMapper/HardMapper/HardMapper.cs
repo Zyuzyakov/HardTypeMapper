@@ -1,5 +1,6 @@
 ﻿using HardTypeMapper.IQuerybleMapping;
 using Interfaces.CollectionRules;
+using Interfaces.Includes;
 using Interfaces.MapMethods;
 using Models.HardMapperModels;
 using System;
@@ -14,12 +15,13 @@ namespace HardTypeMapper
     {
         private readonly List<MapInfo> _mapInfos;
         private readonly ICollectionRules _collectionRules;
-        protected List<IncludeProps> IncludeProps;
+        protected IList<IncludeProps> _includeProps;
 
         public HardMapper(ICollectionRules collectionRules)
         {
             _mapInfos = new List<MapInfo>();
-            _collectionRules = collectionRules ?? throw new System.ArgumentNullException(nameof(collectionRules));
+            _collectionRules = collectionRules ?? throw new ArgumentNullException(nameof(collectionRules));
+            _includeProps = new List<IncludeProps>();
         }
 
         #region MapObjects methods
@@ -78,16 +80,17 @@ namespace HardTypeMapper
         #endregion
 
         #region MapQuery
-        public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, string nameRule = null)
+        public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, IIncludeInfo inculdeInfo = null, string nameRule = null)
         {
             if (from is null)
                 throw new ArgumentNullException(nameof(from));
 
-            VisitExpression(from.Expression);
-
-            var fromThisClass = CallFromThisClass(true);
+            if (inculdeInfo != null)
+                _includeProps = inculdeInfo.GetIncludes(from);
 
             var rule = _collectionRules.GetRule<TFrom, TTo>();
+
+            _mapInfos.Add(new MapInfo(true, true, rule));
 
             return from.Select(x => rule.Compile()(this, x));
         }
@@ -131,13 +134,6 @@ namespace HardTypeMapper
         }
 
         private MapInfo GetMapInfo(Expression expr) => _mapInfos.FirstOrDefault(x => x.Expr == expr);
-
-        private void VisitExpression(Expression expr)
-        {
-            var visitor = new ExpressionIncludeVisitor();
-            visitor.Visit(expr);
-            IncludeProps = visitor.GetIncludeTypesAndClear();
-        }
         #endregion
     }
 }
