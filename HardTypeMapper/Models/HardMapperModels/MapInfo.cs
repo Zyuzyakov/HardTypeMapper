@@ -19,15 +19,19 @@ namespace Models.HardMapperModels
         public bool ItRootMapper { get; set; } = false;
         public Expression Expr { get; set; }
 
-      /*  public override bool Equals(object obj)
-        {
-            if (obj is not MapInfo)
-                return false;
 
-            var mapInfoObj = obj as MapInfo;
+        /* 
+          сравнение по Expr
+          public override bool Equals(object obj)
+          {
+              if (obj is not MapInfo)
+                  return false;
 
-            return Expr == mapInfoObj?.Expr;
-        }
-        public override int GetHashCode() => base.GetHashCode();*/
+              var mapInfoObj = obj as MapInfo;
+
+              return Expr == mapInfoObj?.Expr;
+          }
+          public override int GetHashCode() => base.GetHashCode();
+        */
     }
 }
