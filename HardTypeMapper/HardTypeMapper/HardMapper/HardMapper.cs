@@ -88,7 +88,7 @@ namespace HardTypeMapper
             if (inculdeInfo != null)
                 _includeProps = inculdeInfo.GetIncludes(from);
 
-            var rule = _collectionRules.GetRule<TFrom, TTo>();
+            var rule = _collectionRules.GetRule<TFrom, TTo>(nameRule);
 
             _mapInfos.Add(new MapInfo(true, true, rule));
 

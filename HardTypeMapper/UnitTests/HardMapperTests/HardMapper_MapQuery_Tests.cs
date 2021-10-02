@@ -111,6 +111,7 @@ namespace UnitTests.HardMapperTests
             }            
         }
 
+        #region FromStreet
         [Fact]
         public void Map_FromStreetQuery_WithOutIIncludeInfo_WithOutInclude_Correct()
         {
@@ -195,5 +196,92 @@ namespace UnitTests.HardMapperTests
                 Assert.Null(house2DtoFlat3.HouseDto);
             }
         }
+        #endregion
+
+        #region FromHouse
+        [Fact]
+        public void Map_FromHouseQuery_WithOutIIncludeInfo_WithOutInclude_Correct()
+        {
+            SetupDb(nameof(Map_FromHouseQuery_WithOutIIncludeInfo_WithOutInclude_Correct));
+
+            using (var context = new TestContext(_options))
+            {
+                var houses = context.Houses;
+
+                var listHouses = hardMapper.Map<House, HouseDto>(houses).ToList();
+
+                Assert.Equal(2, listHouses.Count());
+
+                var houseDto1 = listHouses.First(x => x.Name == "house");
+                var houseDto2 = listHouses.First(x => x.Name == "house2");
+
+                Assert.Null(houseDto1.StreetDto);
+                Assert.Empty(houseDto1.FlatsDto);
+                Assert.Null(houseDto2.StreetDto);
+                Assert.Empty(houseDto2.FlatsDto);
+            }
+        }
+
+        [Fact]
+        public void Map_FromHouseQuery_WithOutIIncludeInfo_WithInclude_Correct()
+        {
+            SetupDb(nameof(Map_FromHouseQuery_WithOutIIncludeInfo_WithInclude_Correct));
+
+            using (var context = new TestContext(_options))
+            {
+                var houses = context.Houses.Include(x => x.Flats).Include(x => x.Street);
+
+                var listHouses = hardMapper.Map<House, HouseDto>(houses).ToList();
+
+                Assert.Equal(2, listHouses.Count());
+
+                var houseDto1 = listHouses.First(x => x.Name == "house");
+                var houseDto2 = listHouses.First(x => x.Name == "house2");
+
+                Assert.NotNull(houseDto1.StreetDto);
+                Assert.Empty(houseDto1.StreetDto.HousesDto);
+                Assert.NotNull(houseDto2.StreetDto);
+                Assert.Empty(houseDto2.StreetDto.HousesDto);
+
+                Assert.Single(houseDto1.FlatsDto);
+                Assert.Equal(2, houseDto2.FlatsDto.Count());
+
+                var flatDto1 = houseDto1.FlatsDto.First();
+                var flatDto2 = houseDto2.FlatsDto.First(x => x.Name == "flat2");
+                var flatDto3 = houseDto2.FlatsDto.First(x => x.Name == "flat3");
+
+                Assert.Null(flatDto1.HouseDto);
+                Assert.Null(flatDto2.HouseDto);
+                Assert.Null(flatDto3.HouseDto);
+            }
+        }
+
+        [Fact]
+        public void Map_FromHouseQuery_WithIIncludeInfo_WithInclude_Correct()
+        {
+            SetupDb(nameof(Map_FromHouseQuery_WithIIncludeInfo_WithInclude_Correct));
+
+            using (var context = new TestContext(_options))
+            {
+                var houses = context.Houses.Include(x => x.Street).Include(x => x.Flats);
+
+                var listHouses = hardMapper.Map<House, HouseDto>(houses, new ExpressionIncludeEfCoreVisitor()).ToList();
+
+                Assert.Equal(2, listHouses.Count());
+
+                var houseDto1 = listHouses.First(x => x.Name == "house");
+                var houseDto2 = listHouses.First(x => x.Name == "house2");
+
+                Assert.Null(houseDto1.StreetDto);
+                Assert.Empty(houseDto1.FlatsDto);
+                Assert.Null(houseDto2.StreetDto);
+                Assert.Empty(houseDto2.FlatsDto);
+            }
+        }
+        #endregion
+
+        #region FromFlats
+
+        #endregion
     }
 }
