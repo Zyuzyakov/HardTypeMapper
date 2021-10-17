@@ -272,10 +272,21 @@ namespace UnitTests.HardMapperTests
                 var houseDto1 = listHouses.First(x => x.Name == "house");
                 var houseDto2 = listHouses.First(x => x.Name == "house2");
 
-                Assert.Null(houseDto1.StreetDto);
-                Assert.Empty(houseDto1.FlatsDto);
-                Assert.Null(houseDto2.StreetDto);
-                Assert.Empty(houseDto2.FlatsDto);
+                Assert.NotNull(houseDto1.StreetDto);
+                Assert.NotNull(houseDto2.StreetDto);
+                Assert.Empty(houseDto1.StreetDto.HousesDto);
+                Assert.Empty(houseDto2.StreetDto.HousesDto);
+
+                Assert.Equal(1, houseDto1.FlatsDto.Count);                
+                Assert.Equal(2, houseDto2.FlatsDto.Count);
+
+                var flat1 = houseDto1.FlatsDto.First();
+                var flat2 = houseDto2.FlatsDto.First(x => x.Name == "flat2");
+                var flat3 = houseDto2.FlatsDto.First(x => x.Name == "flat3");
+
+                Assert.Null(flat1.HouseDto);
+                Assert.Null(flat2.HouseDto);
+                Assert.Null(flat3.HouseDto);
             }
         }
         #endregion
@@ -356,9 +367,25 @@ namespace UnitTests.HardMapperTests
                 var flatDto2 = listFlats.First(x => x.Name == "flat2");
                 var flatDto3 = listFlats.First(x => x.Name == "flat3");
 
-                Assert.Null(flatDto1.HouseDto);
-                Assert.Null(flatDto2.HouseDto);
-                Assert.Null(flatDto3.HouseDto);
+                Assert.NotNull(flatDto1.HouseDto);
+                Assert.NotNull(flatDto2.HouseDto);
+                Assert.NotNull(flatDto3.HouseDto);
+
+                var house1FromFlat1 = flatDto1.HouseDto;
+                var house2FromFlat2 = flatDto2.HouseDto;
+                var house2FromFlat3 = flatDto3.HouseDto;
+
+                Assert.Empty(house1FromFlat1.FlatsDto);
+                Assert.Empty(house2FromFlat2.FlatsDto);
+                Assert.Empty(house2FromFlat3.FlatsDto);
+
+                Assert.NotNull(house1FromFlat1.StreetDto);
+                Assert.NotNull(house2FromFlat2.StreetDto);
+                Assert.NotNull(house2FromFlat3.StreetDto);
+
+                Assert.Empty(house1FromFlat1.StreetDto.HousesDto);
+                Assert.Empty(house2FromFlat2.StreetDto.HousesDto);
+                Assert.Empty(house2FromFlat3.StreetDto.HousesDto);
             }
         }
         #endregion

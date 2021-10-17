@@ -92,7 +92,7 @@ namespace HardTypeMapper
 
             _mapInfos.Add(new MapInfo(true, true, rule));
 
-            IMapMethods mapMethods = this;
+            var mapMethods = this;
 
             return from.Select(x => rule.Compile()(mapMethods, x));
         }
