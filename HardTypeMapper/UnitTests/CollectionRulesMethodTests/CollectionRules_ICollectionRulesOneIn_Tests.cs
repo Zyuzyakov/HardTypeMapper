@@ -28,7 +28,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> expr = null;
+            Action<IMapMethods, Street, StreetDto> expr = null;
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr));
         }
@@ -38,7 +38,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> expr = (x, y, z) => { };
 
             var iRulesAdd = collectionRules.AddRule(expr);
 
@@ -50,7 +50,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> expr = (x, y, z) => { };
 
             collectionRules.AddRule(expr);
 
@@ -62,7 +62,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> expr = null;
+            Action<IMapMethods, Street, StreetDto> expr = null;
 
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr, null));
             Assert.Throws<ArgumentNullException>(() => collectionRules.AddRule(expr, string.Empty));
@@ -74,7 +74,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> expr = (x, y, z) => { };
 
             var iRulesAdd = collectionRules.AddRule(expr, "test");
 
@@ -86,7 +86,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> expr = (x, y) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> expr = (x, y, z) => { };
 
             collectionRules.AddRule(expr, "test");
 
@@ -108,7 +108,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            collectionRules.AddRule<Street, StreetDto>((y,x) => new StreetDto());
+            collectionRules.AddRule<Street, StreetDto>((y,x, z) => new StreetDto());
 
             var rule = collectionRules.GetAnyRule<Street, StreetDto>();
 
@@ -136,7 +136,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> exprRule = (colRules, street, dto) => { };
 
             collectionRules.AddRule(exprRule, "test");
 
@@ -150,7 +150,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (mm, street) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> exprRule = (mm, street, dto) => { };
 
             collectionRules.AddRule(exprRule);
 
@@ -164,7 +164,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (mm, street) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> exprRule = (mm, street, dto) => { };
 
             collectionRules.AddRule(exprRule, "test");
 
@@ -176,7 +176,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (mm, street) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> exprRule = (mm, street, dto) => { };
 
             collectionRules.AddRule(exprRule);
 
@@ -198,7 +198,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
 
-            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> exprRule = (colRules, street, dto) => { };
 
             Assert.False(collectionRules.ExistRule<Street, StreetDto>());
 
@@ -234,7 +234,7 @@ namespace UnitTests.CollectionRulesMethodTests
         {
             var collectionRules = new CollectionRules();
          
-            Expression<Func<IMapMethods, Street, StreetDto>> exprRule = (colRules, street) => new StreetDto();
+            Action<IMapMethods, Street, StreetDto> exprRule = (colRules, street, dto) => { };
 
             collectionRules.AddRule(exprRule, "test");
             Assert.True(collectionRules.ExistRule<Street, StreetDto>("test"));

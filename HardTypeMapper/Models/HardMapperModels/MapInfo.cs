@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿using System;
 
 namespace Models.HardMapperModels
 {
@@ -7,17 +7,17 @@ namespace Models.HardMapperModels
         public MapInfo(
             bool itRootMapper,
             bool firstCallFromCollection,
-            Expression expr
+            Delegate action
             )
         {
             ItRootMapper = itRootMapper;
             FirstCallFromCollection = firstCallFromCollection;
-            Expr = expr;
+            Action = action;
         }
 
         public bool FirstCallFromCollection { get; set; }
         public bool ItRootMapper { get; set; } = false;
-        public Expression Expr { get; set; }
+        public Delegate Action { get; set; }
 
 
         /* 

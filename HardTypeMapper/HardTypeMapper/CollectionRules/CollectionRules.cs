@@ -3,14 +3,13 @@ using Interfaces.CollectionRules;
 using Interfaces.MapMethods;
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace HardTypeMapper.CollectionRules
 {
     public class CollectionRules : AbstractCollectionRules, ICollectionRules
     {     
         #region Add methods
-        public IRulesAdd AddRule<TFrom, TTo>(Expression<Func<IMapMethods, TFrom, TTo>> expressionMaping, string nameRule = null)
+        public IRulesAdd AddRule<TFrom, TTo>(Action<IMapMethods, TFrom, TTo> expressionMaping, string nameRule = null)
         {
             var key = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
 
@@ -18,36 +17,24 @@ namespace HardTypeMapper.CollectionRules
 
             return this;
         }
-        public IRulesAdd AddRule<TFrom1, TFrom2, TTo>(Expression<Func<IMapMethods, TFrom1, TFrom2, TTo>> expressionMaping, string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region Get methods
-        public Expression<Func<IMapMethods, TFrom, TTo>> GetAnyRule<TFrom, TTo>()
+        public Action<IMapMethods, TFrom, TTo> GetAnyRule<TFrom, TTo>()
         {
             var key = SetOfTypesHelper.Create<TTo>(null, typeof(TFrom));
 
-            return ConvertExpression<Expression<Func<IMapMethods, TFrom, TTo>>>(GetAnyRule(key));
-        }
-        public Expression<Func<IMapMethods, TFrom1, TFrom2, TTo>> GetAnyRule<TFrom1, TFrom2, TTo>()
-        {
-            throw new NotImplementedException();
+            return ConvertExpression<Action<IMapMethods, TFrom, TTo>>(GetAnyRule(key));
         }
 
-        public Expression<Func<IMapMethods, TFrom, TTo>> GetRule<TFrom, TTo>(string nameRule = null)
+        public Action<IMapMethods, TFrom, TTo> GetRule<TFrom, TTo>(string nameRule = null)
         {
             if (string.Empty == nameRule)
                 throw new ArgumentNullException(nameof(nameRule));
 
             var key = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
 
-            return ConvertExpression<Expression<Func<IMapMethods, TFrom, TTo>>>(GetRule(key));
-        }
-        public Expression<Func<IMapMethods, TFrom1, TFrom2, TTo>> GetRule<TFrom1, TFrom2, TTo>(string nameRule = null)
-        {
-            throw new NotImplementedException();
+            return ConvertExpression<Action<IMapMethods, TFrom, TTo>>(GetRule(key));
         }
         #endregion
 
@@ -61,10 +48,6 @@ namespace HardTypeMapper.CollectionRules
 
             return GetRules(key, true).Any();
         }
-        public bool ExistRule<TFrom1, TFrom2, TTo>(string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region Delete methods
@@ -77,10 +60,6 @@ namespace HardTypeMapper.CollectionRules
 
             DeleteRule(key);
         }
-        public void DeleteRule<TFrom1, TFrom2, TTo>(string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }        
         #endregion
     }
 }

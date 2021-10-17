@@ -4,7 +4,6 @@ namespace Interfaces.MapMethods
 {
     public interface IMapCollection
     {
-        IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from);
-        IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from, string nameRule);
+        IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from, string nameRule = null) where TTo : new(); 
     }
 }

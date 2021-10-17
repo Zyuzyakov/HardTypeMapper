@@ -10,18 +10,18 @@ namespace HardTypeMapper.CollectionRules
     public abstract class AbstractCollectionRules
     {
         #region Сlass variables
-        protected Dictionary<ISetOfTypes, Expression> dictRuleExpression;
+        protected Dictionary<ISetOfTypes, Delegate> dictRuleExpression;
         #endregion
 
         #region Class constructors
         protected AbstractCollectionRules()
         {
-            dictRuleExpression = new Dictionary<ISetOfTypes, Expression>();
+            dictRuleExpression = new Dictionary<ISetOfTypes, Delegate>();
         }
         #endregion
 
         #region Add methods
-        public void AddRule(ISetOfTypes setOfTypes, Expression expressionMaping)
+        public void AddRule(ISetOfTypes setOfTypes, Delegate expressionMaping)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -35,12 +35,12 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Get methods
-        public Expression GetAnyRule(ISetOfTypes setOfTypes)
+        public Delegate GetAnyRule(ISetOfTypes setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
 
-            var rules = GetRules<Expression>(setOfTypes, false);
+            var rules = GetRules<Delegate>(setOfTypes, false);
 
             if (!rules.Any())
                 throw new RuleNotExistException(setOfTypes.SetName, setOfTypes.GetOutTypeParam(), setOfTypes.GetInTypeParams());
@@ -48,12 +48,12 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        public Expression GetRule(ISetOfTypes setOfTypes)
+        public Delegate GetRule(ISetOfTypes setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
 
-            var rules = GetRules<Expression>(setOfTypes, true);
+            var rules = GetRules<Delegate>(setOfTypes, true);
 
             if (!rules.Any())
                 throw new RuleNotExistException(setOfTypes.SetName, setOfTypes.GetOutTypeParam(), setOfTypes.GetInTypeParams());
@@ -61,12 +61,12 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        protected Dictionary<string, Expression> GetRules(ISetOfTypes setOfTypes, bool withName)
+        protected Dictionary<string, Delegate> GetRules(ISetOfTypes setOfTypes, bool withName)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
 
-            var dictReturn = new Dictionary<string, Expression>();
+            var dictReturn = new Dictionary<string, Delegate>();
 
             foreach (var pair in dictRuleExpression)
                 if (pair.Key.Equals(setOfTypes, withName))
@@ -82,7 +82,7 @@ namespace HardTypeMapper.CollectionRules
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
 
-            return GetRules<Expression>(setOfTypes, true).Any();
+            return GetRules<Delegate>(setOfTypes, true).Any();
         }
 
         public void DeleteRule(ISetOfTypes setOfTypes)
@@ -103,10 +103,10 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Class private methods
-        private readonly Func<KeyValuePair<ISetOfTypes, Expression>, ISetOfTypes, bool, bool> equals =
+        private readonly Func<KeyValuePair<ISetOfTypes, Delegate>, ISetOfTypes, bool, bool> equals =
                (pair, existKey, withName) => pair.Key.Equals(existKey, withName);
            
-        private protected TRuleExpr ConvertExpression<TRuleExpr>(Expression expr) where TRuleExpr : Expression
+        private protected TRuleExpr ConvertExpression<TRuleExpr>(Delegate expr) where TRuleExpr : Delegate
         {
             if (expr is TRuleExpr exprConverted)
                 return exprConverted;
@@ -114,7 +114,7 @@ namespace HardTypeMapper.CollectionRules
             throw new ExpressionNotNeededTypeException(typeof(TRuleExpr).FullName);
         }
 
-        protected IEnumerable<TRuleExpr> GetRules<TRuleExpr>(ISetOfTypes key, bool checkName) where TRuleExpr : Expression
+        protected IEnumerable<TRuleExpr> GetRules<TRuleExpr>(ISetOfTypes key, bool checkName) where TRuleExpr : Delegate
         {
             foreach (var item in dictRuleExpression)
                 if (equals(item, key, checkName))

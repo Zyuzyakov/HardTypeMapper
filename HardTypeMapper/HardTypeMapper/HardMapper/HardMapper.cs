@@ -1,5 +1,4 @@
-﻿using HardTypeMapper.IQuerybleMapping;
-using Interfaces.CollectionRules;
+﻿using Interfaces.CollectionRules;
 using Interfaces.Includes;
 using Interfaces.MapMethods;
 using Models.HardMapperModels;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace HardTypeMapper
 {
@@ -25,62 +23,57 @@ namespace HardTypeMapper
         }
 
         #region MapObjects methods
-        public TTo Map<TFrom, TTo>(TFrom from)
+        public TTo Map<TFrom, TTo>(TFrom from, string nameRule = null) where TTo : new()
         {
             if (from is null)
                 return default;
 
             var fromThisClass = CallFromThisClass(false);
 
-            var rule = _collectionRules.GetRule<TFrom, TTo>();
+            var rule = _collectionRules.GetRule<TFrom, TTo>(nameRule);           
 
             if (ContinueProcessMap(rule, fromThisClass, false))
-                return rule.Compile()(this, from);
+            {
+                var retObj = new TTo();
+
+                rule(this, from, retObj);
+
+                return retObj;            
+            }
 
             return default;
-        }
-        public TTo Map<TFrom, TTo>(TFrom from, string nameRule)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public TTo Map<TFrom1, TFrom2, TTo>(TFrom1 from1, TFrom2 from2)
-        {
-            throw new System.NotImplementedException();
-        }
-        public TTo Map<TFrom1, TFrom2, TTo>(TFrom1 from1, TFrom2 from2, string nameRule)
-        {
-            throw new System.NotImplementedException();
         }
         #endregion
 
         #region MapCollection
-        public IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from)
+        public IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from, string nameRule = null) where TTo : new()
         {
             if (from is null)
                 yield break;
 
             var fromThisClass = CallFromThisClass(true);
 
-            var rule = _collectionRules.GetRule<TFrom, TTo>();
+            var rule = _collectionRules.GetRule<TFrom, TTo>(nameRule);
 
             if (ContinueProcessMap(rule, fromThisClass, true))
             {
-                var ruleFunc = rule.Compile();
+                var ruleFunc = rule;
 
                 foreach (var item in from)
                     if (item is not null)
-                        yield return ruleFunc(this, item);
+                    {
+                        var retObj = new TTo();
+
+                        ruleFunc(this, item, retObj);
+
+                        yield return retObj;
+                    }
             }
-        }
-        public IEnumerable<TTo> Map<TFrom, TTo>(IEnumerable<TFrom> from, string nameRule)
-        {
-            throw new System.NotImplementedException();
         }
         #endregion
 
         #region MapQuery
-        public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, IIncludeInfo inculdeInfo = null, string nameRule = null)
+        public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, IIncludeInfo inculdeInfo = null, string nameRule = null) where TTo : new()
         {
             if (from is null)
                 throw new ArgumentNullException(nameof(from));
@@ -94,7 +87,9 @@ namespace HardTypeMapper
 
             var mapMethods = this;
 
-            return from.Select(x => rule.Compile()(mapMethods, x));
+            Func<IMapMethods, TFrom, TTo> funcSelect = (mm, from) => { var to = new TTo(); rule(mapMethods, from, to); return to; };
+
+            return from.Select(x => funcSelect(mapMethods, x));
         }
         #endregion
 
@@ -119,7 +114,7 @@ namespace HardTypeMapper
             return false;
         }
 
-        private bool ContinueProcessMap(Expression rule, bool fromThisClass, bool callFromCollection)
+        private bool ContinueProcessMap(Delegate rule, bool fromThisClass, bool callFromCollection)
         {
             var mapInfo = GetMapInfo(rule);
 
@@ -135,7 +130,7 @@ namespace HardTypeMapper
             return true;
         }
 
-        private MapInfo GetMapInfo(Expression expr) => _mapInfos.FirstOrDefault(x => x.Expr == expr);
+        private MapInfo GetMapInfo(Delegate expr) => _mapInfos.FirstOrDefault(x => x.Action == expr);
         #endregion
     }
 }

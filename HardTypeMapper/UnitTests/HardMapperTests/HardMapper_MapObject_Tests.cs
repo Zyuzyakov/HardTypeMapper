@@ -22,23 +22,23 @@ namespace UnitTests.HardMapperTests
         {
             collectionRules = new CollectionRules();
 
-            collectionRules.AddRule<Flat, FlatDto>((mm, flat) => new FlatDto()
+            collectionRules.AddRule<Flat, FlatDto>((mm, flat, dto) =>
             {
-                Name = flat.Name,
-                HouseDto = mm.Map<House, HouseDto>(flat.House)
+                dto.Name = flat.Name;
+                dto.HouseDto = mm.Map<House, HouseDto>(flat.House);
             });
 
-            collectionRules.AddRule<House, HouseDto>((mm, house) => new HouseDto()
+            collectionRules.AddRule<House, HouseDto>((mm, house, dto) =>
             {
-                Name = house.Name,
-                StreetDto = mm.Map<Street, StreetDto>(house.Street),
-                FlatsDto = mm.Map<Flat, FlatDto>(house.Flats).ToList()
+                dto.Name = house.Name;
+                dto.StreetDto = mm.Map<Street, StreetDto>(house.Street);
+                dto.FlatsDto = mm.Map<Flat, FlatDto>(house.Flats).ToList();
             });
 
-            collectionRules.AddRule<Street, StreetDto>((mm, street) => new StreetDto()
+            collectionRules.AddRule<Street, StreetDto>((mm, street, dto) =>
             {
-                Name = street.Name,
-                HousesDto = mm.Map<House, HouseDto>(street.Houses).ToList()
+                dto.Name = street.Name;
+                dto.HousesDto = mm.Map<House, HouseDto>(street.Houses).ToList();
             });
 
             hardMapper = new HardMapper(collectionRules);
