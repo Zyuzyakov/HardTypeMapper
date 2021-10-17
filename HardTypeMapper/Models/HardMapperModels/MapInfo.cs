@@ -18,20 +18,5 @@ namespace Models.HardMapperModels
         public bool FirstCallFromCollection { get; set; }
         public bool ItRootMapper { get; set; } = false;
         public Delegate Action { get; set; }
-
-
-        /* 
-          сравнение по Expr
-          public override bool Equals(object obj)
-          {
-              if (obj is not MapInfo)
-                  return false;
-
-              var mapInfoObj = obj as MapInfo;
-
-              return Expr == mapInfoObj?.Expr;
-          }
-          public override int GetHashCode() => base.GetHashCode();
-        */
     }
 }

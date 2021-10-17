@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HardTypeMapper.IQuerybleMapping
 {
-    class QueryMappingInfo
+    internal class QueryMappingInfo
     {
         public List<IncludeProps> IncludeProps { get; set; } // что было заинклюжено настоящими инклудами
         public IncludeProps CurrentInfoInclude { get; set; } // в текущем мапере что инклудится и куда

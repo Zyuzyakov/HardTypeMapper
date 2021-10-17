@@ -3,33 +3,32 @@ using HardTypeMapper.Models.CollectionModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace HardTypeMapper.CollectionRules
 {
     public abstract class AbstractCollectionRules
     {
         #region Сlass variables
-        protected Dictionary<ISetOfTypes, Delegate> dictRuleExpression;
+        protected Dictionary<ISetOfTypes, Delegate> dictRuleAction;
         #endregion
 
         #region Class constructors
         protected AbstractCollectionRules()
         {
-            dictRuleExpression = new Dictionary<ISetOfTypes, Delegate>();
+            dictRuleAction = new Dictionary<ISetOfTypes, Delegate>();
         }
         #endregion
 
         #region Add methods
-        public void AddRule(ISetOfTypes setOfTypes, Delegate expressionMaping)
+        public void AddRule(ISetOfTypes setOfTypes, Delegate actionMaping)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
 
-            if (expressionMaping is null)
-                throw new ArgumentNullException(nameof(expressionMaping));
+            if (actionMaping is null)
+                throw new ArgumentNullException(nameof(actionMaping));
 
-            if (!dictRuleExpression.TryAdd(setOfTypes, expressionMaping))
+            if (!dictRuleAction.TryAdd(setOfTypes, actionMaping))
                  throw new RuleNotAddException(setOfTypes.SetName);
         }
         #endregion
@@ -68,7 +67,7 @@ namespace HardTypeMapper.CollectionRules
 
             var dictReturn = new Dictionary<string, Delegate>();
 
-            foreach (var pair in dictRuleExpression)
+            foreach (var pair in dictRuleAction)
                 if (pair.Key.Equals(setOfTypes, withName))
                     dictReturn.Add(pair.Key.SetName, pair.Value);
 
@@ -90,10 +89,10 @@ namespace HardTypeMapper.CollectionRules
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
 
-            foreach (var item in dictRuleExpression)
+            foreach (var item in dictRuleAction)
                 if (equals(item, setOfTypes, true))
                 {
-                    dictRuleExpression.Remove(item.Key);
+                    dictRuleAction.Remove(item.Key);
 
                     return;
                 }
@@ -106,19 +105,19 @@ namespace HardTypeMapper.CollectionRules
         private readonly Func<KeyValuePair<ISetOfTypes, Delegate>, ISetOfTypes, bool, bool> equals =
                (pair, existKey, withName) => pair.Key.Equals(existKey, withName);
            
-        private protected TRuleExpr ConvertExpression<TRuleExpr>(Delegate expr) where TRuleExpr : Delegate
+        private protected TRule ConvertAction<TRule>(Delegate action) where TRule : Delegate
         {
-            if (expr is TRuleExpr exprConverted)
-                return exprConverted;
+            if (action is TRule actionConverted)
+                return actionConverted;
 
-            throw new ExpressionNotNeededTypeException(typeof(TRuleExpr).FullName);
+            throw new DelegateNotNeededTypeException(typeof(TRule).FullName);
         }
 
-        protected IEnumerable<TRuleExpr> GetRules<TRuleExpr>(ISetOfTypes key, bool checkName) where TRuleExpr : Delegate
+        protected IEnumerable<TRule> GetRules<TRule>(ISetOfTypes key, bool checkName) where TRule : Delegate
         {
-            foreach (var item in dictRuleExpression)
+            foreach (var item in dictRuleAction)
                 if (equals(item, key, checkName))
-                    yield return ConvertExpression<TRuleExpr>(item.Value);
+                    yield return ConvertAction<TRule>(item.Value);
         }
         #endregion
     }

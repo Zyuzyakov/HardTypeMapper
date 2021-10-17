@@ -9,11 +9,11 @@ namespace HardTypeMapper.CollectionRules
     public class CollectionRules : AbstractCollectionRules, ICollectionRules
     {     
         #region Add methods
-        public IRulesAdd AddRule<TFrom, TTo>(Action<IMapMethods, TFrom, TTo> expressionMaping, string nameRule = null)
+        public IRulesAdd AddRule<TFrom, TTo>(Action<IMapMethods, TFrom, TTo> actionMaping, string nameRule = null)
         {
             var key = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
 
-            AddRule(key, expressionMaping);
+            AddRule(key, actionMaping);
 
             return this;
         }
@@ -24,7 +24,7 @@ namespace HardTypeMapper.CollectionRules
         {
             var key = SetOfTypesHelper.Create<TTo>(null, typeof(TFrom));
 
-            return ConvertExpression<Action<IMapMethods, TFrom, TTo>>(GetAnyRule(key));
+            return ConvertAction<Action<IMapMethods, TFrom, TTo>>(GetAnyRule(key));
         }
 
         public Action<IMapMethods, TFrom, TTo> GetRule<TFrom, TTo>(string nameRule = null)
@@ -34,7 +34,7 @@ namespace HardTypeMapper.CollectionRules
 
             var key = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
 
-            return ConvertExpression<Action<IMapMethods, TFrom, TTo>>(GetRule(key));
+            return ConvertAction<Action<IMapMethods, TFrom, TTo>>(GetRule(key));
         }
         #endregion
 
