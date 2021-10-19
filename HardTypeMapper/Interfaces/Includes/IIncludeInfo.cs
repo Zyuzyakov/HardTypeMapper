@@ -7,6 +7,8 @@ namespace Interfaces.Includes
     {
         IList<IncludeProps> GetIncludes(IQueryable query);
 
-        bool IsInclude(IncludeProps props);
+        bool IsInclude(IncludeProps propSearch);
+
+        void AddInclude(IncludeProps prop);
     }
 }

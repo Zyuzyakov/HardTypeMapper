@@ -117,7 +117,9 @@ namespace HardTypeMapper
         {
             var mapInfo = GetMapInfo(rule);
 
-            if (mapInfo is null)
+            if (_includeInfo != null)
+                return _includeInfo.IsInclude(new IncludeProps());
+            else if (mapInfo is null)
                 _mapInfos.Add(new MapInfo(!fromThisClass, callFromCollection, rule));
             else if (fromThisClass && mapInfo.ItRootMapper)
                 return false;

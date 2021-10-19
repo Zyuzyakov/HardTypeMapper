@@ -24,9 +24,13 @@ namespace HardTypeMapper.IQuerybleMapping
             return GetIncludesAndClear();
         }
 
-        public bool IsInclude(IncludeProps props)
+        public bool IsInclude(IncludeProps propSearch)
         {
-            throw new NotImplementedException();
+            foreach (var prop in includeTypes)
+                if (prop.Equals(propSearch))
+                    return true;
+
+            return false;
         }
 
         protected List<IncludeProps> GetIncludesAndClear()
@@ -109,6 +113,14 @@ namespace HardTypeMapper.IQuerybleMapping
             includeTypes.Add(includeInfo);
             nowInIncludeCall = false;
             includeInfo = new IncludeProps();
-        }        
+        }
+
+        public void AddInclude(IncludeProps prop)
+        {
+            if (prop is null)
+                throw new ArgumentNullException(nameof(prop));
+
+            includeTypes.Add(prop);
+        }
     }
 }

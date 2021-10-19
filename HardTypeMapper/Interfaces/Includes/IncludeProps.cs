@@ -3,7 +3,7 @@
 namespace Interfaces.Includes
 {
     // Информация о заинклуженном свойстве
-    public class IncludeProps
+    public class IncludeProps : IEquatable<IncludeProps>
     {
         public Type ClassInclude { get; set; } // Тип класса в который заинклужено
         public string PropertyInclude { get; set; } // Свойство в которое заинклужено
@@ -34,6 +34,19 @@ namespace Interfaces.Includes
         public IncludeProps Clone()
         {
             return new IncludeProps(ClassInclude, PropertyInclude, TypeInclude);
+        }
+
+        public bool Equals(IncludeProps other)
+        {
+            bool classEqual = ClassInclude.FullName == other.ClassInclude.FullName;
+
+            bool propertyuEqual = PropertyInclude == other.PropertyInclude;
+
+            bool typeEqual = TypeInclude == other.TypeInclude;
+
+            if (classEqual && propertyuEqual && typeEqual)
+                return true;
+            else return false;
         }
     }
 }

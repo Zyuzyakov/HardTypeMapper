@@ -2,6 +2,7 @@
 using HardTypeMapper.CollectionRules;
 using HardTypeMapper.IQuerybleMapping;
 using Interfaces.CollectionRules;
+using Interfaces.Includes;
 using Interfaces.MapMethods;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -179,6 +180,35 @@ namespace UnitTests.HardMapperTests
                 var streetDto = listStreets.First(x => x.Name == "street");
 
                 Assert.Empty(streetDto.HousesDto);
+            }
+        }
+
+        [Fact]
+        public void Map_FromStreetQuery_WithIIncludeInfo_WithOutInclude_Correct()
+        {
+            SetupDb(nameof(Map_FromStreetQuery_WithIIncludeInfo_WithOutInclude_Correct));
+
+            using (var context = new TestContext(_options))
+            {
+                var streets = context.Streets;
+
+                var includeInfo = new ExpressionIncludeEfCoreVisitor();
+
+                includeInfo.AddInclude(new IncludeProps());
+
+                var listStreets = hardMapper.Map<Street, StreetDto>(streets, includeInfo).ToList();
+
+                Assert.Single(listStreets);
+
+                var streetDto = listStreets.First(x => x.Name == "street");
+
+                Assert.Equal(2, streetDto.HousesDto.Count());
+
+                var house1 = streetDto.HousesDto.First(x => x.Name == "house");
+                var house2 = streetDto.HousesDto.First(x => x.Name == "house2");
+
+                Assert.Empty(house1.FlatsDto);
+                Assert.Empty(house2.FlatsDto);
             }
         }
         #endregion
