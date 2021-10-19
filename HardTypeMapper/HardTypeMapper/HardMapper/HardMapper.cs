@@ -1,5 +1,4 @@
 ﻿using Interfaces.CollectionRules;
-using Interfaces.Includes;
 using Interfaces.MapMethods;
 using Models.HardMapperModels;
 using System;
@@ -13,7 +12,6 @@ namespace HardTypeMapper
     {
         private readonly List<MapInfo> _mapInfos;
         private readonly ICollectionRules _collectionRules;
-        protected IIncludeInfo _includeInfo;
 
         public HardMapper(ICollectionRules collectionRules)
         {
@@ -72,13 +70,10 @@ namespace HardTypeMapper
         #endregion
 
         #region MapQuery
-        public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, IIncludeInfo inculdeInfo = null, string nameRule = null) where TTo : new()
+        public IQueryable<TTo> Map<TFrom, TTo>(IQueryable<TFrom> from, string nameRule = null) where TTo : new()
         {
             if (from is null)
                 throw new ArgumentNullException(nameof(from));
-
-            if (inculdeInfo != null)
-                _includeInfo = inculdeInfo;
 
             var rule = _collectionRules.GetRule<TFrom, TTo>(nameRule);
 
@@ -117,9 +112,7 @@ namespace HardTypeMapper
         {
             var mapInfo = GetMapInfo(rule);
 
-            if (_includeInfo != null)
-                return _includeInfo.IsInclude(new IncludeProps());
-            else if (mapInfo is null)
+            if (mapInfo is null)
                 _mapInfos.Add(new MapInfo(!fromThisClass, callFromCollection, rule));
             else if (fromThisClass && mapInfo.ItRootMapper)
                 return false;

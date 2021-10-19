@@ -1,24 +1,23 @@
-﻿using Interfaces.Includes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace HardTypeMapper.IQuerybleMapping
+namespace HardTypeMapper.QuerybleMapping
 {
     internal class QueryMappingInfo
     {
-        public List<IncludeProps> IncludeProps { get; set; } // что было заинклюжено настоящими инклудами
-        public IncludeProps CurrentInfoInclude { get; set; } // в текущем мапере что инклудится и куда
+        public List<IncludeProp> IncludeProps { get; set; } // что было заинклюжено настоящими инклудами
+        public IncludeProp CurrentInfoInclude { get; set; } // в текущем мапере что инклудится и куда
         public bool MapQuery { get; set; } = false; // изначально мапится квери
         public bool? OnlyNotDeleted { get; set; } // параметр deleted расспространяется на все заинклуженные сущности
 
-        public QueryMappingInfo(List<IncludeProps> infoIncludes, IncludeProps currentInfoInclude, bool mapNotQuery, bool? onlyNotDeleted)
+        public QueryMappingInfo(List<IncludeProp> infoIncludes, IncludeProp currentInfoInclude, bool mapNotQuery, bool? onlyNotDeleted)
             : this(currentInfoInclude, mapNotQuery, onlyNotDeleted)
         {
             IncludeProps = infoIncludes;
         }
 
-        public QueryMappingInfo(IncludeProps currentInfoInclude, bool mapNotQuery, bool? onlyNotDeleted)
+        public QueryMappingInfo(IncludeProp currentInfoInclude, bool mapNotQuery, bool? onlyNotDeleted)
         {
-            IncludeProps = new List<IncludeProps>();
+            IncludeProps = new List<IncludeProp>();
 
             MapQuery = mapNotQuery;
             CurrentInfoInclude = currentInfoInclude;

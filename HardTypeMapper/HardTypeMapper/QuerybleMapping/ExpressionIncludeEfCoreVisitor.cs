@@ -1,47 +1,29 @@
-﻿using Interfaces.Includes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace HardTypeMapper.IQuerybleMapping
+namespace HardTypeMapper.QuerybleMapping
 {
     // Обходит дерево выражений и находит все Include/ThenInclude
-    public class ExpressionIncludeEfCoreVisitor : ExpressionVisitor, IIncludeInfo
+    internal class ExpressionIncludeEfCoreVisitor : ExpressionVisitor
     {
-        private List<IncludeProps> includeTypes = new List<IncludeProps>();
-        private IncludeProps includeInfo = new IncludeProps();
+        private List<IncludeProp> includeTypes = new List<IncludeProp>();
+        private IncludeProp includeInfo = new IncludeProp();
         private bool nowInIncludeCall = false;
 
         private const string INCLUDE = "Include";
         private const string THENINCLUDE = "ThenInclude";
-
-        public IList<IncludeProps> GetIncludes(IQueryable query)
-        {
-            Visit(query.Expression);
-
-            return GetIncludesAndClear();
-        }
-
-        public bool IsInclude(IncludeProps propSearch)
-        {
-            foreach (var prop in includeTypes)
-                if (prop.Equals(propSearch))
-                    return true;
-
-            return false;
-        }
-
-        protected List<IncludeProps> GetIncludesAndClear()
+        
+        protected List<IncludeProp> GetIncludesAndClear()
         {
             nowInIncludeCall = false;
 
-            includeInfo = new IncludeProps();
+            includeInfo = new IncludeProp();
 
             var retutnList = includeTypes;
 
-            includeTypes = new List<IncludeProps>();
+            includeTypes = new List<IncludeProp>();
 
             return retutnList;
         }      
@@ -112,15 +94,7 @@ namespace HardTypeMapper.IQuerybleMapping
         {
             includeTypes.Add(includeInfo);
             nowInIncludeCall = false;
-            includeInfo = new IncludeProps();
-        }
-
-        public void AddInclude(IncludeProps prop)
-        {
-            if (prop is null)
-                throw new ArgumentNullException(nameof(prop));
-
-            includeTypes.Add(prop);
+            includeInfo = new IncludeProp();
         }
     }
 }
