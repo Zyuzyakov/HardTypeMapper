@@ -24,6 +24,11 @@ namespace HardTypeMapper.IQuerybleMapping
             return GetIncludesAndClear();
         }
 
+        public bool IsInclude(IncludeProps props)
+        {
+            throw new NotImplementedException();
+        }
+
         protected List<IncludeProps> GetIncludesAndClear()
         {
             nowInIncludeCall = false;
@@ -35,7 +40,7 @@ namespace HardTypeMapper.IQuerybleMapping
             includeTypes = new List<IncludeProps>();
 
             return retutnList;
-        }
+        }      
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {

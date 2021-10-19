@@ -175,25 +175,10 @@ namespace UnitTests.HardMapperTests
                 var listStreets = hardMapper.Map<Street, StreetDto>(streets, new ExpressionIncludeEfCoreVisitor()).ToList();
 
                 Assert.Single(listStreets);
+
                 var streetDto = listStreets.First(x => x.Name == "street");
-                Assert.Equal(2, streetDto.HousesDto.Count);
 
-                var house1Dto = streetDto.HousesDto.First(x => x.Name == "house");
-                Assert.Null(house1Dto.StreetDto);
-                Assert.Single(house1Dto.FlatsDto);
-                var house1DtoFlat = house1Dto.FlatsDto.First();
-                Assert.NotNull(house1DtoFlat);
-                Assert.Null(house1DtoFlat.HouseDto);
-
-                var house2Dto = streetDto.HousesDto.First(x => x.Name == "house2");
-                Assert.Null(house2Dto.StreetDto);
-                Assert.Equal(2, house2Dto.FlatsDto.Count);
-                var house2DtoFlat2 = house2Dto.FlatsDto.First(x => x.Name == "flat2");
-                Assert.NotNull(house2DtoFlat2);
-                Assert.Null(house2DtoFlat2.HouseDto);
-                var house2DtoFlat3 = house2Dto.FlatsDto.First(x => x.Name == "flat3");
-                Assert.NotNull(house2DtoFlat3);
-                Assert.Null(house2DtoFlat3.HouseDto);
+                Assert.Empty(streetDto.HousesDto);
             }
         }
         #endregion
@@ -272,21 +257,11 @@ namespace UnitTests.HardMapperTests
                 var houseDto1 = listHouses.First(x => x.Name == "house");
                 var houseDto2 = listHouses.First(x => x.Name == "house2");
 
-                Assert.NotNull(houseDto1.StreetDto);
-                Assert.NotNull(houseDto2.StreetDto);
-                Assert.Empty(houseDto1.StreetDto.HousesDto);
-                Assert.Empty(houseDto2.StreetDto.HousesDto);
+                Assert.Null(houseDto1.StreetDto);
+                Assert.Null(houseDto2.StreetDto);
 
-                Assert.Equal(1, houseDto1.FlatsDto.Count);                
-                Assert.Equal(2, houseDto2.FlatsDto.Count);
-
-                var flat1 = houseDto1.FlatsDto.First();
-                var flat2 = houseDto2.FlatsDto.First(x => x.Name == "flat2");
-                var flat3 = houseDto2.FlatsDto.First(x => x.Name == "flat3");
-
-                Assert.Null(flat1.HouseDto);
-                Assert.Null(flat2.HouseDto);
-                Assert.Null(flat3.HouseDto);
+                Assert.Empty(houseDto1.FlatsDto);
+                Assert.Empty(houseDto2.FlatsDto);
             }
         }
         #endregion
@@ -367,25 +342,9 @@ namespace UnitTests.HardMapperTests
                 var flatDto2 = listFlats.First(x => x.Name == "flat2");
                 var flatDto3 = listFlats.First(x => x.Name == "flat3");
 
-                Assert.NotNull(flatDto1.HouseDto);
-                Assert.NotNull(flatDto2.HouseDto);
-                Assert.NotNull(flatDto3.HouseDto);
-
-                var house1FromFlat1 = flatDto1.HouseDto;
-                var house2FromFlat2 = flatDto2.HouseDto;
-                var house2FromFlat3 = flatDto3.HouseDto;
-
-                Assert.Empty(house1FromFlat1.FlatsDto);
-                Assert.Empty(house2FromFlat2.FlatsDto);
-                Assert.Empty(house2FromFlat3.FlatsDto);
-
-                Assert.NotNull(house1FromFlat1.StreetDto);
-                Assert.NotNull(house2FromFlat2.StreetDto);
-                Assert.NotNull(house2FromFlat3.StreetDto);
-
-                Assert.Empty(house1FromFlat1.StreetDto.HousesDto);
-                Assert.Empty(house2FromFlat2.StreetDto.HousesDto);
-                Assert.Empty(house2FromFlat3.StreetDto.HousesDto);
+                Assert.Null(flatDto1.HouseDto);
+                Assert.Null(flatDto2.HouseDto);
+                Assert.Null(flatDto3.HouseDto);
             }
         }
         #endregion

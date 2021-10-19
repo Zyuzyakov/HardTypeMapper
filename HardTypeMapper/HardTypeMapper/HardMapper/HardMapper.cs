@@ -13,13 +13,12 @@ namespace HardTypeMapper
     {
         private readonly List<MapInfo> _mapInfos;
         private readonly ICollectionRules _collectionRules;
-        protected IList<IncludeProps> _includeProps;
+        protected IIncludeInfo _includeInfo;
 
         public HardMapper(ICollectionRules collectionRules)
         {
             _mapInfos = new List<MapInfo>();
             _collectionRules = collectionRules ?? throw new ArgumentNullException(nameof(collectionRules));
-            _includeProps = new List<IncludeProps>();
         }
 
         #region MapObjects methods
@@ -79,7 +78,7 @@ namespace HardTypeMapper
                 throw new ArgumentNullException(nameof(from));
 
             if (inculdeInfo != null)
-                _includeProps = inculdeInfo.GetIncludes(from);
+                _includeInfo = inculdeInfo;
 
             var rule = _collectionRules.GetRule<TFrom, TTo>(nameRule);
 
