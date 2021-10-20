@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.CollectionRules
 {
-    public interface IRulesDelete
+    public interface IDeleteRule
     {
         void DeleteRule<TFrom, TTo>(string nameRule = null);
     }

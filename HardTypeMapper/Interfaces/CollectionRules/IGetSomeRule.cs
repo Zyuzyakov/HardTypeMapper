@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.CollectionRules
 {
-    public interface IRulesGets : IRulesGet, IRulesGetAny
+    public interface IGetSomeRule : IGetRule, IGetAnyRule
     {       
     }
 }

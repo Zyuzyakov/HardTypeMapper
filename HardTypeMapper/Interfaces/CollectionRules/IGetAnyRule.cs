@@ -3,7 +3,7 @@ using System;
 
 namespace Interfaces.CollectionRules
 {
-    public interface IRulesGetAny
+    public interface IGetAnyRule
     {
         Action<IMapMethods, TFrom, TTo> GetAnyRule<TFrom, TTo>();
     }

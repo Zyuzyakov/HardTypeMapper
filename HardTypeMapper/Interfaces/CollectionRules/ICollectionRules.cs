@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.CollectionRules
 {
-    public interface ICollectionRules : IRulesAdd, IRulesGets, IRulesExist, IRulesDelete
+    public interface ICollectionRules : IAddRule, IGetSomeRule, IExistRule, IDeleteRule
     {
     }
 }

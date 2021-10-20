@@ -1,12 +1,13 @@
 ﻿using Exceptions.ForCollectionRules;
 using HardTypeMapper.Models.CollectionModels;
+using Interfaces.CollectionRules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace HardTypeMapper.CollectionRules
 {
-    public abstract class AbstractCollectionRules
+    public abstract class AbstractCollectionRules : ILinkBaseRule
     {
         #region Сlass variables
         protected Dictionary<ISetOfTypes, Delegate> dictRuleAction;
@@ -31,6 +32,17 @@ namespace HardTypeMapper.CollectionRules
             if (!dictRuleAction.TryAdd(setOfTypes, actionMaping))
                  throw new RuleNotAddException(setOfTypes.SetName);
         }
+
+        public void AddParentMapIfExistRule()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddParentMap(string nameRule = null)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Get methods

@@ -9,7 +9,7 @@ namespace HardTypeMapper.CollectionRules
     public class CollectionRules : AbstractCollectionRules, ICollectionRules
     {     
         #region Add methods
-        public IRulesAdd AddRule<TFrom, TTo>(Action<IMapMethods, TFrom, TTo> actionMaping, string nameRule = null)
+        public ILinkBaseRule AddRule<TFrom, TTo>(Action<IMapMethods, TFrom, TTo> actionMaping, string nameRule = null)
         {
             var key = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
 
