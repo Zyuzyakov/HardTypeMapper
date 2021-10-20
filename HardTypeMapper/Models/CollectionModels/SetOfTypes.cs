@@ -1,24 +1,15 @@
-﻿using System;
+﻿using Interfaces.CollectionRules;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace HardTypeMapper.Models.CollectionModels
 {
-    public interface ISetOfTypes
-    {
-        Type GetOutTypeParam();
-
-        Type[] GetInTypeParams();
-
-        string SetName { get; }
-
-        bool Equals(object obj, bool withName);
-    }
-
     public struct SetOfTypes<TOutType> : ISetOfTypes
     {
         public SetOfTypes(Type inType, string nameRule = null)
         {
+            ParentRule = null;
             SetName = nameRule ?? string.Empty;
             inTypes = new HashSet<Type>
             {
@@ -28,13 +19,14 @@ namespace HardTypeMapper.Models.CollectionModels
 
         public SetOfTypes(string nameRule, params Type[] inTypes)
         {
+            ParentRule = null;
             SetName = nameRule ?? string.Empty;
             this.inTypes = new HashSet<Type>();
             foreach (var param in inTypes)
                 this.inTypes.Add(param);
         }
 
-        public readonly string SetName { get; }
+        public readonly string SetName { get; init; }
 
         private HashSet<Type> inTypes { get; set; }
 
@@ -49,6 +41,8 @@ namespace HardTypeMapper.Models.CollectionModels
                 return arrayTypes;
             }
         }
+
+        public IParentRule ParentRule { get; set; }
 
         public Type GetOutTypeParam()
         {

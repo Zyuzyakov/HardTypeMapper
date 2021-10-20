@@ -1,5 +1,4 @@
 ﻿using Exceptions.ForCollectionRules;
-using HardTypeMapper.Models.CollectionModels;
 using Interfaces.CollectionRules;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,8 @@ namespace HardTypeMapper.CollectionRules
     {
         #region Сlass variables
         protected Dictionary<ISetOfTypes, Delegate> dictRuleAction;
+
+        protected ISetOfTypes lastAddRule;
         #endregion
 
         #region Class constructors
@@ -27,10 +28,12 @@ namespace HardTypeMapper.CollectionRules
                 throw new ArgumentNullException(nameof(setOfTypes));
 
             if (actionMaping is null)
-                throw new ArgumentNullException(nameof(actionMaping));
+                throw new ArgumentNullException(nameof(actionMaping));            
 
             if (!dictRuleAction.TryAdd(setOfTypes, actionMaping))
                  throw new RuleNotAddException(setOfTypes.SetName);
+
+            lastAddRule = setOfTypes;
         }
 
         public void AddParentMapIfExistRule()
@@ -130,6 +133,11 @@ namespace HardTypeMapper.CollectionRules
             foreach (var item in dictRuleAction)
                 if (equals(item, key, checkName))
                     yield return ConvertAction<TRule>(item.Value);
+        }
+
+        private bool TryGetParentType(Type target, out Type parentType)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }
