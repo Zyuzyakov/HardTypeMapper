@@ -11,13 +11,13 @@ namespace UnitTests.ModelsTests
         [Fact]
         public void SetOfTypes_VoidConstructor_Correct()
         {
-            var setOfTypes1 = new SetOfTypes<object>();
+            var setOfTypes1 = new SetOfRule<object>();
 
             Assert.Empty(setOfTypes1.InTypes);
             Assert.True(string.IsNullOrEmpty(setOfTypes1.SetName));
             Assert.Equal(typeof(object), setOfTypes1.GetOutTypeParam());
 
-            var setOfTypes2 = new SetOfTypes<object>();
+            var setOfTypes2 = new SetOfRule<object>();
 
             Assert.Empty(setOfTypes2.InTypes);
             Assert.True(string.IsNullOrEmpty(setOfTypes2.SetName));
@@ -29,13 +29,13 @@ namespace UnitTests.ModelsTests
         [Fact]
         public void SetOfTypes_ParamConstructor_Correct()
         {
-            var setOfTypes1 = new SetOfTypes<Street>(typeof(StreetDto));
+            var setOfTypes1 = new SetOfRule<Street>(typeof(StreetDto));
 
             Assert.Single(setOfTypes1.InTypes);
             Assert.True(string.IsNullOrEmpty(setOfTypes1.SetName));
             Assert.Equal(typeof(Street), setOfTypes1.GetOutTypeParam());
 
-            var setOfTypes2 = new SetOfTypes<Street>(typeof(StreetDto), "test");
+            var setOfTypes2 = new SetOfRule<Street>(typeof(StreetDto), "test");
 
             Assert.Single(setOfTypes2.InTypes);
             Assert.Equal("test", setOfTypes2.SetName);
@@ -47,7 +47,7 @@ namespace UnitTests.ModelsTests
         [Fact]
         public void SetOfTypes_MultiInParams_Correct()
         {
-            var setOfTypes1 = new SetOfTypes<Street>("", typeof(StreetDto), typeof(HouseDto));
+            var setOfTypes1 = new SetOfRule<Street>("", typeof(StreetDto), typeof(HouseDto));
 
             Assert.Equal(2, setOfTypes1.InTypes.ToList().Count);
             Assert.True(string.IsNullOrEmpty(setOfTypes1.SetName));
@@ -57,13 +57,13 @@ namespace UnitTests.ModelsTests
         [Fact]
         public void Equals_MultiInParams_Correct()
         {
-            var setOfTypes1 = new SetOfTypes<Street>("", typeof(StreetDto), typeof(HouseDto));
+            var setOfTypes1 = new SetOfRule<Street>("", typeof(StreetDto), typeof(HouseDto));
 
             Assert.Equal(2, setOfTypes1.InTypes.ToList().Count);
             Assert.True(string.IsNullOrEmpty(setOfTypes1.SetName));
             Assert.Equal(typeof(Street), setOfTypes1.GetOutTypeParam());
 
-            var setOfTypes2 = new SetOfTypes<Street>("", typeof(HouseDto), typeof(StreetDto));
+            var setOfTypes2 = new SetOfRule<Street>("", typeof(HouseDto), typeof(StreetDto));
 
             Assert.Equal(2, setOfTypes2.InTypes.ToList().Count);
             Assert.True(string.IsNullOrEmpty(setOfTypes2.SetName));
@@ -76,13 +76,13 @@ namespace UnitTests.ModelsTests
         [Fact]
         public void EqualsWithOutName_MultiInParams_Correct()
         {
-            var setOfTypes1 = new SetOfTypes<Street>("", typeof(StreetDto), typeof(HouseDto));
+            var setOfTypes1 = new SetOfRule<Street>("", typeof(StreetDto), typeof(HouseDto));
 
             Assert.Equal(2, setOfTypes1.InTypes.ToList().Count);
             Assert.True(string.IsNullOrEmpty(setOfTypes1.SetName));
             Assert.Equal(typeof(Street), setOfTypes1.GetOutTypeParam());
 
-            var setOfTypes2 = new SetOfTypes<Street>("test", typeof(HouseDto), typeof(StreetDto));
+            var setOfTypes2 = new SetOfRule<Street>("test", typeof(HouseDto), typeof(StreetDto));
 
             Assert.Equal(2, setOfTypes2.InTypes.ToList().Count);
             Assert.Equal("test", setOfTypes2.SetName);

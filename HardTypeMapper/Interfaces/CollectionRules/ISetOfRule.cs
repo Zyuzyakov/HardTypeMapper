@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Interfaces.CollectionRules
 {
-    public interface ISetOfTypes
+    public interface ISetOfRule
     {
         Type GetOutTypeParam();
 
@@ -13,6 +12,6 @@ namespace Interfaces.CollectionRules
 
         bool Equals(object obj, bool withName);
 
-        List<IParentRule> ParentRules { get; set; }
+        IParentRule ParentRule { get; set; }
     }
 }

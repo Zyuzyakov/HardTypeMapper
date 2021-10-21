@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace HardTypeMapper.Models.CollectionModels
 {
-    public struct SetOfTypes<TOutType> : ISetOfTypes
+    public struct SetOfRule<TOutType> : ISetOfRule
     {
-        public SetOfTypes(Type inType, string nameRule = null)
+        public SetOfRule(Type inType, string nameRule = null)
         {
-            ParentRules = new List<IParentRule>();
+            ParentRule = null;
             SetName = nameRule ?? string.Empty;
             inTypes = new HashSet<Type>
             {
@@ -17,9 +17,9 @@ namespace HardTypeMapper.Models.CollectionModels
             };
         }
 
-        public SetOfTypes(string nameRule, params Type[] inTypes)
+        public SetOfRule(string nameRule, params Type[] inTypes)
         {
-            ParentRules = new List<IParentRule>();
+            ParentRule = null;
             SetName = nameRule ?? string.Empty;
             this.inTypes = new HashSet<Type>();
             foreach (var param in inTypes)
@@ -42,7 +42,7 @@ namespace HardTypeMapper.Models.CollectionModels
             }
         }
 
-        public List<IParentRule> ParentRules { get; set; }
+        public IParentRule ParentRule { get; set; }
 
         public Type GetOutTypeParam()
         {
@@ -60,7 +60,7 @@ namespace HardTypeMapper.Models.CollectionModels
 
             if (equals)
             {
-                var equalsObj = (SetOfTypes<TOutType>)obj;
+                var equalsObj = (SetOfRule<TOutType>)obj;
 
                 if (SetName == equalsObj.SetName)
                     return true;
@@ -78,10 +78,10 @@ namespace HardTypeMapper.Models.CollectionModels
 
         private bool EqualsWithOutName(object obj)
         {
-            if (obj is not SetOfTypes<TOutType>)
+            if (obj is not SetOfRule<TOutType>)
                 return false;
 
-            var equalsObj = (SetOfTypes<TOutType>)obj;
+            var equalsObj = (SetOfRule<TOutType>)obj;
 
             if (InTypes.ToList().Count != equalsObj.InTypes.ToList().Count)
                 return false;          

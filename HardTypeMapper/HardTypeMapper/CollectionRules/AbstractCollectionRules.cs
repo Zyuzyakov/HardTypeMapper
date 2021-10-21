@@ -9,20 +9,20 @@ namespace HardTypeMapper.CollectionRules
     public abstract class AbstractCollectionRules : ILinkBaseRule
     {
         #region Сlass variables
-        protected Dictionary<ISetOfTypes, Delegate> dictRuleAction;
+        protected Dictionary<ISetOfRule, Delegate> dictRuleAction;
 
-        protected ISetOfTypes lastAddRule;
+        protected ISetOfRule lastAddSetOfRule;
         #endregion
 
         #region Class constructors
         protected AbstractCollectionRules()
         {
-            dictRuleAction = new Dictionary<ISetOfTypes, Delegate>();
+            dictRuleAction = new Dictionary<ISetOfRule, Delegate>();
         }
         #endregion
 
         #region Add methods
-        public void AddRule(ISetOfTypes setOfTypes, Delegate actionMaping)
+        public void AddRule(ISetOfRule setOfTypes, Delegate actionMaping)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -33,19 +33,29 @@ namespace HardTypeMapper.CollectionRules
             if (!dictRuleAction.TryAdd(setOfTypes, actionMaping))
                  throw new RuleNotAddException(setOfTypes.SetName);
 
-            lastAddRule = setOfTypes;
+            lastAddSetOfRule = setOfTypes;
         }
 
-        public ILinkBaseRule AddParentMap<TChildType, TParentType>(string nameRule = null) 
-            where TParentType : new()
-            where TChildType : new()
+        public void AddParentMap(string nameRule = null) 
         {
+
+            if (!TryGetParentType(lastAddSetOfRule.GetOutTypeParam(), out Type parentType))
+                throw new NotHaveParentClassException(lastAddSetOfRule.GetOutTypeParam());
+
+            if (!TryGetParentSetOfRule(parentType, nameRule, out ISetOfRule parentSetOfRule))
+                throw new NotHaveParentSetOfRuleException(parentType, nameRule);
+
+            if (!ChildSetMatchParentSet(lastAddSetOfRule, parentSetOfRule))
+                throw new ParentSetCanNotBeUsedWithChildSetException(lastAddSetOfRule.GetOutTypeParam(), parentType);
+
+            //to do нужно проверить входящие типы parentSetOfRule с lastAddSetOfRule и их иерархию наследования
+
             throw new NotImplementedException();
         }
         #endregion
 
         #region Get methods
-        public Delegate GetAnyRule(ISetOfTypes setOfTypes)
+        public Delegate GetAnyRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -58,7 +68,7 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        public Delegate GetRule(ISetOfTypes setOfTypes)
+        public Delegate GetRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -71,7 +81,7 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        protected Dictionary<string, Delegate> GetRules(ISetOfTypes setOfTypes, bool withName)
+        protected Dictionary<string, Delegate> GetRules(ISetOfRule setOfTypes, bool withName)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -87,7 +97,7 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Exist and Delete methods
-        public bool ExistRule(ISetOfTypes setOfTypes)
+        public bool ExistRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -95,7 +105,7 @@ namespace HardTypeMapper.CollectionRules
             return GetRules<Delegate>(setOfTypes, true).Any();
         }
 
-        public void DeleteRule(ISetOfTypes setOfTypes)
+        public void DeleteRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -113,7 +123,7 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Class private methods
-        private readonly Func<KeyValuePair<ISetOfTypes, Delegate>, ISetOfTypes, bool, bool> equals =
+        private readonly Func<KeyValuePair<ISetOfRule, Delegate>, ISetOfRule, bool, bool> equals =
                (pair, existKey, withName) => pair.Key.Equals(existKey, withName);
            
         private protected TRule ConvertAction<TRule>(Delegate action) where TRule : Delegate
@@ -124,7 +134,7 @@ namespace HardTypeMapper.CollectionRules
             throw new DelegateNotNeededTypeException(typeof(TRule).FullName);
         }
 
-        protected IEnumerable<TRule> GetRules<TRule>(ISetOfTypes key, bool checkName) where TRule : Delegate
+        protected IEnumerable<TRule> GetRules<TRule>(ISetOfRule key, bool checkName) where TRule : Delegate
         {
             foreach (var item in dictRuleAction)
                 if (equals(item, key, checkName))
@@ -132,6 +142,16 @@ namespace HardTypeMapper.CollectionRules
         }
 
         private bool TryGetParentType(Type target, out Type parentType)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool TryGetParentSetOfRule(Type parentType, string nameRule, out ISetOfRule parentSetOfRule)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ChildSetMatchParentSet(ISetOfRule chieldSet, ISetOfRule parentSet)
         {
             throw new NotImplementedException();
         }

@@ -4,8 +4,6 @@ namespace Interfaces.CollectionRules
 {
     public interface ILinkBaseRule
     {
-        ILinkBaseRule AddParentMap<TChildType, TParentType>(string nameRule = null) 
-            where TParentType : new() 
-            where TChildType : new();
+        void AddParentMap(string nameRule = null);
     }
 }
