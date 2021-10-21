@@ -9,7 +9,7 @@ namespace HardTypeMapper.Models.CollectionModels
     {
         public SetOfTypes(Type inType, string nameRule = null)
         {
-            ParentRule = null;
+            ParentRules = new List<IParentRule>();
             SetName = nameRule ?? string.Empty;
             inTypes = new HashSet<Type>
             {
@@ -19,7 +19,7 @@ namespace HardTypeMapper.Models.CollectionModels
 
         public SetOfTypes(string nameRule, params Type[] inTypes)
         {
-            ParentRule = null;
+            ParentRules = new List<IParentRule>();
             SetName = nameRule ?? string.Empty;
             this.inTypes = new HashSet<Type>();
             foreach (var param in inTypes)
@@ -42,7 +42,7 @@ namespace HardTypeMapper.Models.CollectionModels
             }
         }
 
-        public IParentRule ParentRule { get; set; }
+        public List<IParentRule> ParentRules { get; set; }
 
         public Type GetOutTypeParam()
         {

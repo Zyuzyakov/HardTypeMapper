@@ -36,16 +36,12 @@ namespace HardTypeMapper.CollectionRules
             lastAddRule = setOfTypes;
         }
 
-        public void AddParentMapIfExistRule()
+        public ILinkBaseRule AddParentMap<TChildType, TParentType>(string nameRule = null) 
+            where TParentType : new()
+            where TChildType : new()
         {
             throw new NotImplementedException();
         }
-
-        public void AddParentMap(string nameRule = null)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
         #region Get methods

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Interfaces.CollectionRules
 {
@@ -12,6 +13,6 @@ namespace Interfaces.CollectionRules
 
         bool Equals(object obj, bool withName);
 
-        IParentRule ParentRule { get; set; }
+        List<IParentRule> ParentRules { get; set; }
     }
 }
