@@ -158,11 +158,26 @@ namespace HardTypeMapper.CollectionRules
 
         private bool ChildSetMatchParentSet(ISetOfRule chieldSet, ISetOfRule parentSet)
         {
-            //to do нужно проверить входящие типы parentSetOfRule с lastAddSetOfRule и их иерархию наследования
+            //to do нужно проверить входящие типы parentSet с chieldSet и их иерархию наследования (чтобы каждый параметр соответствовал)
 
 
+        }
 
-            throw new NotImplementedException();
+        private IEnumerable<Type> GetHierarchyTypes(Type type)
+        {
+            yield return type;
+
+            var objectType = typeof(object);
+
+            while (type != null)
+            {
+                type = type.BaseType;
+
+                if (type == objectType)
+                    type = null;
+                else if (type != null)
+                    yield return type;
+            }
         }
         #endregion
     }
