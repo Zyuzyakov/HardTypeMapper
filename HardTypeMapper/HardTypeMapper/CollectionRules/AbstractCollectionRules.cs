@@ -48,8 +48,6 @@ namespace HardTypeMapper.CollectionRules
             if (!ChildSetMatchParentSet(lastAddSetOfRule, parentSetOfRule))
                 throw new ParentSetCanNotBeUsedWithChildSetException(lastAddSetOfRule.GetOutTypeParam(), parentType);
 
-            //to do нужно проверить входящие типы parentSetOfRule с lastAddSetOfRule и их иерархию наследования
-
             throw new NotImplementedException();
         }
         #endregion
@@ -143,16 +141,27 @@ namespace HardTypeMapper.CollectionRules
 
         private bool TryGetParentType(Type target, out Type parentType)
         {
-            throw new NotImplementedException();
+            parentType = target.BaseType;
+
+            if (parentType == typeof(object))
+                parentType = null;
+
+            return parentType != null;
         }
 
         private bool TryGetParentSetOfRule(Type parentType, string nameRule, out ISetOfRule parentSetOfRule)
         {
-            throw new NotImplementedException();
+            parentSetOfRule = dictRuleAction.FirstOrDefault(x => x.Key.GetOutTypeParam() == parentType && x.Key.SetName == nameRule).Key;
+
+            return parentSetOfRule != null;
         }
 
         private bool ChildSetMatchParentSet(ISetOfRule chieldSet, ISetOfRule parentSet)
         {
+            //to do нужно проверить входящие типы parentSetOfRule с lastAddSetOfRule и их иерархию наследования
+
+
+
             throw new NotImplementedException();
         }
         #endregion
