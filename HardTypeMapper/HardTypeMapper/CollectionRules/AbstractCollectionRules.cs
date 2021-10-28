@@ -160,7 +160,7 @@ namespace HardTypeMapper.CollectionRules
         {
             //to do нужно проверить входящие типы parentSet с chieldSet и их иерархию наследования (чтобы каждый параметр соответствовал)
 
-
+            throw new NotImplementedException();
         }
 
         private IEnumerable<Type> GetHierarchyTypes(Type type)

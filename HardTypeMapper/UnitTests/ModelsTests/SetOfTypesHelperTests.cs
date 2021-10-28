@@ -8,7 +8,7 @@ namespace UnitTests.ModelsTests
     public class SetOfTypesHelperTests
     {
         [Fact]
-        public void Create_WhenInParamsNullOrZero_ThrowArgumentException()
+        public void Create_WhenInParamsNullOrEmpty_ThrowArgumentException()
         {
             Assert.Throws<ArgumentException>(() => SetOfTypesHelper.Create<StreetDto>(string.Empty, null));
         }
