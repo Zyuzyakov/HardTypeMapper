@@ -205,9 +205,7 @@ namespace UnitTests.CollectionRulesMethodTests
             collectionRules.AddRule(exprRule, "test");
 
             Assert.True(collectionRules.ExistRule<Street, StreetDto>("test"));
-
-            Assert.False(collectionRules.ExistRule<Street, StreetDto>());
-
+            Assert.False(collectionRules.ExistRule<Street, StreetDto>()); 
             Assert.False(collectionRules.ExistRule<Street, StreetDto>("notExist"));
         }
 
