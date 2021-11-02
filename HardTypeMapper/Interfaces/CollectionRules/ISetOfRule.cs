@@ -12,6 +12,6 @@ namespace Interfaces.CollectionRules
 
         bool Equals(object obj, bool withName);
 
-        IParentRule ParentRule { get; set; }
+        ISetOfRule ParentRule { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace HardTypeMapper.Models.CollectionModels
             }
         }
 
-        public IParentRule ParentRule { get; set; }
+        public ISetOfRule ParentRule { get; set; }
 
         public Type GetOutTypeParam()
         {

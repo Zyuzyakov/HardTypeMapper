@@ -22,7 +22,7 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Add methods
-        public void AddRule(ISetOfRule setOfTypes, Delegate actionMaping)
+        protected void AddRule(ISetOfRule setOfTypes, Delegate actionMaping)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -38,22 +38,21 @@ namespace HardTypeMapper.CollectionRules
 
         public void AddParentMap(string nameRule = null) 
         {
-
             if (!TryGetParentType(lastAddSetOfRule.GetOutTypeParam(), out Type parentType))
                 throw new NotHaveParentClassException(lastAddSetOfRule.GetOutTypeParam());
 
             if (!TryGetParentSetOfRule(parentType, nameRule, out ISetOfRule parentSetOfRule))
                 throw new NotHaveParentSetOfRuleException(parentType, nameRule);
 
-            if (!ChildSetMatchParentSet(lastAddSetOfRule, parentSetOfRule))
-                throw new ParentSetCanNotBeUsedWithChildSetException(lastAddSetOfRule.GetOutTypeParam(), parentType);
+            if (!ChildSetMatchParentSet_InParams(lastAddSetOfRule, parentSetOfRule))
+                throw new InParamsNotMatchException(lastAddSetOfRule.GetOutTypeParam(), parentSetOfRule.GetOutTypeParam());
 
-            throw new NotImplementedException();
+            lastAddSetOfRule.ParentRule = parentSetOfRule;
         }
         #endregion
 
         #region Get methods
-        public Delegate GetAnyRule(ISetOfRule setOfTypes)
+        protected Delegate GetAnyRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -66,7 +65,7 @@ namespace HardTypeMapper.CollectionRules
             return rules.First();
         }
 
-        public Delegate GetRule(ISetOfRule setOfTypes)
+        protected Delegate GetRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -95,7 +94,7 @@ namespace HardTypeMapper.CollectionRules
         #endregion
 
         #region Exist and Delete methods
-        public bool ExistRule(ISetOfRule setOfTypes)
+        protected bool ExistRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -103,7 +102,7 @@ namespace HardTypeMapper.CollectionRules
             return GetRules<Delegate>(setOfTypes, true).Any();
         }
 
-        public void DeleteRule(ISetOfRule setOfTypes)
+        protected void DeleteRule(ISetOfRule setOfTypes)
         {
             if (setOfTypes is null)
                 throw new ArgumentNullException(nameof(setOfTypes));
@@ -151,16 +150,42 @@ namespace HardTypeMapper.CollectionRules
 
         private bool TryGetParentSetOfRule(Type parentType, string nameRule, out ISetOfRule parentSetOfRule)
         {
+            nameRule = nameRule ?? string.Empty;
             parentSetOfRule = dictRuleAction.FirstOrDefault(x => x.Key.GetOutTypeParam() == parentType && x.Key.SetName == nameRule).Key;
-
+            
             return parentSetOfRule != null;
         }
 
-        private bool ChildSetMatchParentSet(ISetOfRule chieldSet, ISetOfRule parentSet)
+        private bool ChildSetMatchParentSet_InParams(ISetOfRule childSet, ISetOfRule parentSet)
         {
-            //to do нужно проверить входящие типы parentSet с chieldSet и их иерархию наследования (чтобы каждый параметр соответствовал)
+            var parentParams = parentSet.GetInTypeParams().ToList();
+            var childParams = childSet.GetInTypeParams().ToList();
 
-            throw new NotImplementedException();
+            if (parentParams.Count != childParams.Count)
+                throw new InParamsNotMatchException(parentSet.GetOutTypeParam(), childSet.GetOutTypeParam());
+
+            foreach (var inChild in childParams)
+            {
+                bool success = false;
+                var childHierarchy = GetHierarchyTypes(inChild).ToList();
+
+                foreach (var childHierarchyType in childHierarchy)
+                {
+                   var exist = parentParams.FirstOrDefault(x => x == childHierarchyType);
+
+                    if (exist is not null)
+                    {
+                        parentParams.Remove(exist);
+                        success = true;
+                        break;
+                    }
+                }
+
+                if (!success)
+                    return false;
+            }
+
+            return true;
         }
 
         private IEnumerable<Type> GetHierarchyTypes(Type type)

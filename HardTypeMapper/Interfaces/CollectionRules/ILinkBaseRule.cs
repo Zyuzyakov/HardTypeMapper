@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Interfaces.CollectionRules
+﻿namespace Interfaces.CollectionRules
 {
     public interface ILinkBaseRule
     {
