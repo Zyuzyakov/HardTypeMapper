@@ -2,6 +2,7 @@
 using Interfaces.CollectionRules;
 using Interfaces.MapMethods;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -27,10 +28,10 @@ namespace HardTypeMapper.CollectionRules
                 throw new ArgumentNullException(nameof(nameRule));
 
             var setKey = SetOfTypesHelper.Create<TTo>(nameRule, typeof(TFrom));
-
             var setRule = dictRuleAction.FirstOrDefault(x => x.Key.Equals(setKey, true));
 
-            var actionWithParent = ConvertAction<Action<IMapMethods, TFrom, TTo>>(setRule.Value);
+            var actionsWithParent = new List<Action<IMapMethods, TFrom, TTo>>();
+            actionsWithParent.Add(ConvertAction<Action<IMapMethods, TFrom, TTo>>(setRule.Value));
 
             Func<ISetOfRule, Action<IMapMethods, TFrom, TTo>> getAction = s 
                 => ConvertAction<Action<IMapMethods, TFrom, TTo>>(dictRuleAction[s]);
@@ -38,11 +39,16 @@ namespace HardTypeMapper.CollectionRules
             var set = setRule.Key.ParentRule;
             while (set != null)
             {
-                actionWithParent = (mm, from, to) => { actionWithParent(mm, from, to); getAction(set)(mm, from, to); };
+                actionsWithParent.Add(getAction(set));
                 set = set.ParentRule; 
             }
 
-            return actionWithParent;
+            Action<IMapMethods, TFrom, TTo> finalyRule = (mm, from, to) => {
+                foreach (var a in actionsWithParent)
+                    a(mm, from, to);
+            };
+
+            return finalyRule;
         }
 
         public Action<IMapMethods, TFrom, TTo> GetAnyRule<TFrom, TTo>()

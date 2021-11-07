@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.CollectionRulesMethodTests
 {
-    public class CollectionRules_AddParent_Tests
+    public class CollectionRules_AddParent_GetRuleWithParent_Tests
     {
         #region Class constructors
         [Fact]
@@ -18,7 +18,7 @@ namespace UnitTests.CollectionRulesMethodTests
         }
         #endregion
 
-        #region AddParent methods
+        #region AddParent method
         [Fact]
         public void AddParentRule_Correct()
         {
@@ -39,11 +39,38 @@ namespace UnitTests.CollectionRulesMethodTests
             Assert.NotNull(ruleParent);
 
             var child = new Child() { ChildField = "child", ParentField = "parent" };
-
             var dto = new ChildDto();
 
             ruleChild.Invoke(null, child, dto);
             ruleParent.Invoke(null, child, dto);
+
+            Assert.Equal("child", dto.ChildField);
+            Assert.Equal("parent", dto.ParentField);
+        }
+        #endregion
+
+        #region GetRuleWithParent method
+        [Fact]
+        public void GetRuleWithParent_Correct()
+        {
+            var collectionRules = new CollectionRules();
+
+            Action<IMapMethods, Child, ChildDto> actionChild = (mm, c, cdto)
+                => { cdto.ChildField = c.ChildField; };
+            Action<IMapMethods, Parent, ParentDto> actionParent = (mm, p, pdto)
+                => { pdto.ParentField = p.ParentField; };
+
+            collectionRules.AddRule(actionParent);
+            collectionRules.AddRule(actionChild).AddParentMap();
+
+            var ruleChild = collectionRules.GetRuleWithParent<Child, ChildDto>();
+
+            Assert.NotNull(ruleChild);
+
+            var child = new Child() { ChildField = "child", ParentField = "parent" };
+            var dto = new ChildDto();
+
+            ruleChild.Invoke(null, child, dto);
 
             Assert.Equal("child", dto.ChildField);
             Assert.Equal("parent", dto.ParentField);
